@@ -260,8 +260,6 @@ This guide provides a roadmap to help you navigate your role confidently and con
 
 Welcome aboard! Your contributions will be vital to GitLab’s continued growth and financial excellence. Should you have questions or need support, your FP&A manager and team members are here to help.
 
-```
-
 ---
 
 ### References
