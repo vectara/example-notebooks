@@ -2,7 +2,7 @@
 Vectara is an end-to-end platform designed to empower product builders by embedding powerful Generative AI features into their applications.
 Vectara supports an API enabling full access to its features primarily focused around Retrieval Augmented Generation (RAG) capabilities, allowing businesses to integrate conversational AI and question-answering functionalities safely and affordably.
 
-Vectara support REST API endpoints, using GET and POST requests for the most common operations.
+Vectara supports REST API endpoints, using GET and POST requests for the most common operations.
 It follows HTTP status code conventions (2xx indicating a successful response, 4xx indicating an error in the request, and 5xx indicating a server error).
 In the case of a 4xx error, the response object will likely include a "messages" key, which is a list of strings indicating the errors of the request.
 
@@ -24,11 +24,11 @@ There is a fixed set of functions and operators that can be used with metadata f
 
 ## Query APIs
 
-The query endpoints allow you to perform RAG across one or more copora in a user account, retrieving the most relevant documents and generating a response to the query using an LLM.
+The query endpoints allow you to perform RAG across one or more corpora in a user account, retrieving the most relevant documents and generating a response to the query using an LLM.
 The API request includes 2 main groups of parameters:
 
 1.  Search parameters that allow you to filter data by associated document or part metadata, a hybrid search parameter (how much to use keyword vs. neural search), how to rerank results after the initial retrieval, and how much additional context to provide with the matching texts.
-2.  Summarization parameters that control the generated response by the LLM, including the LLM model, a custom prompt, the maximum number of search results that should be used to generate the response, the response language, how to present citations, and whether to include the factual consistency score with the query results (Factual Consistency Score is a metric that evaluates the likelihood of AI-generated summaries being factually accurate based on the retrieved data; it is available for responses generated in English, German, French, Portugese, Spanish, Arabic, Chinese-Simplified, Korean, Russian, Japanese, and Hindi).
+2.  Summarization parameters that control the generated response by the LLM, including the LLM model, a custom prompt, the maximum number of search results that should be used to generate the response, the response language, how to present citations, and whether to include the factual consistency score with the query results (Factual Consistency Score is a metric that evaluates the likelihood of AI-generated summaries being factually accurate based on the retrieved data; it is available for responses generated in English, German, French, Portuguese, Spanish, Arabic, Chinese-Simplified, Korean, Russian, Japanese, and Hindi).
 
 Custom prompts must follow a specific template which is specified on this page: https://docs.vectara.com/docs/prompts/vectara-prompt-engine.
 When creating these prompts, you can access certain variables and functions which can be found on this page: https://docs.vectara.com/docs/prompts/custom-prompts-with-metadata
@@ -53,7 +53,7 @@ you can index the document using the add document API. This supports two kinds o
 2.  A core document where you provide a more granular structure, explicitly defining each document part as it should be represented when it is stored by Vectara.
     this gives you the most control over how your document is stored in a Vectara corpus.
 
-To learn more about these document types, check out these pages about [Structured Document Objects](https://docs.vectara.com/docs/api-reference/indexing-apis/indexing#structured-document-object-definition) and [Core Docuemnt Objects](https://docs.vectara.com/docs/api-reference/indexing-apis/indexing#core-document-object-definition)
+To learn more about these document types, check out these pages about [Structured Document Objects](https://docs.vectara.com/docs/api-reference/indexing-apis/indexing#structured-document-object-definition) and [Core Document Objects](https://docs.vectara.com/docs/api-reference/indexing-apis/indexing#core-document-object-definition)
 
 You can find the documentation for indexing a document in a corpus here: https://docs.vectara.com/docs/rest-api/create-corpus-document
 
