@@ -35,6 +35,7 @@ The API request includes 2 main groups of parameters:
 2.  Summarization parameters that control the generated response by the LLM, including the LLM model, a custom prompt, the maximum number of search results that should be used to generate the response, the response language, how to present citations, and whether to include the factual consistency score with the query results (Factual Consistency Score is a metric that evaluates the likelihood of AI-generated summaries being factually accurate based on the retrieved data; it is available for responses generated in English, German, French, Portuguese, Spanish, Arabic, Chinese-Simplified, Korean, Russian, Japanese, and Hindi).
 
 Custom prompts must follow a specific template which is specified on this page: https://docs.vectara.com/docs/prompts/vectara-prompt-engine.
+
 When creating these prompts, you can access certain variables and functions which can be found on this page: https://docs.vectara.com/docs/prompts/custom-prompts-with-metadata
 
 If you want to query a single Vectara corpus, you should use the Advanced Single Corpus Query endpoint.
@@ -48,6 +49,7 @@ If you need to add a new document to a Vectara corpus, you can use the Index and
 
 The File Upload API allows you to upload PDF and Microsoft Word files as well as other text documents.
 The supported file types can be found on this page: https://docs.vectara.com/docs/api-reference/indexing-apis/file-upload/file-upload-filetypes
+
 Vectara will handle the chunking and indexing of these documents for you so that it is optimized for high-quality retrieval.
 The documentation for this endpoint can be found on this page: https://docs.vectara.com/docs/rest-api/upload-file
 
@@ -84,7 +86,9 @@ Documentation for this endpoint is found on this page: https://docs.vectara.com/
 If you would like to retrieve a summary of a document, you can use the Summarize Document endpoint.
 You are able to choose the LLM used to generate the summary and can give a custom prompt if you would like.
 To see the available list of LLMs, use the List LLMs API endpoint: https://docs.vectara.com/docs/rest-api/list-ll-ms
+
 If you want to use an LLM that is not in this list, you can set up a new LLM using the Create LLM endpoint ([Documentation](https://docs.vectara.com/docs/api-reference/llms-apis/create-llm) and [API Reference](https://docs.vectara.com/docs/rest-api/create-llm)).
+
 Refer to the custom prompt documentation provided above to see how to structure prompts.
 The documentation for the Summarize Document endpoint is found on this page: https://docs.vectara.com/docs/rest-api/summarize-corpus-document
 
