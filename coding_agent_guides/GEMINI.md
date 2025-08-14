@@ -3,6 +3,8 @@ Vectara is an end-to-end platform designed to empower product builders by embedd
 Vectara supports an API enabling full access to its features primarily focused around Retrieval Augmented Generation (RAG) capabilities, allowing businesses to integrate conversational AI and question-answering functionalities safely and affordably.
 
 Vectara supports REST API endpoints, using GET and POST requests for the most common operations.
+Use APIv2 only (do not use APIv1)
+
 It follows HTTP status code conventions (2xx indicating a successful response, 4xx indicating an error in the request, and 5xx indicating a server error).
 In the case of a 4xx error, the response object will likely include a "messages" key, which is a list of strings indicating the errors of the request.
 
