@@ -8,7 +8,7 @@ In the case of a 4xx error, the response object will likely include a "messages"
 
 You can create a corpus in Vectara that would hold your data, or use an existing corpus if you know the corpus key.
 
-The most common API endpoints used are the query APIs (For single or multiple corpora), the index and file upload APIs (for adding new documents to corpora), the document APIs (for retrieving, listing, and summarizing documents in a corpus), the corpus APIs (for retrieving metadata about a corpus), and the factual consistency APIs.
+The most common API endpoints used are the query APIs (for single or multiple corpora), the index and file upload APIs (for adding new documents to corpora), the document APIs (for retrieving, listing, and summarizing documents in a corpus), the corpus APIs (for retrieving metadata about a corpus), and the factual consistency APIs.
 
 Every request will require an API key as a credential in the header of the request.
 You will also need to specify the corpus key(s) for the corpora that you want to perform the operation on.
@@ -19,7 +19,9 @@ Many API endpoints have a metadata_filter argument which allows you to filter th
 Vectara has a specific structure for how these filters should be expressed.
 
 This page contains an overview about the different types of metadata filters: https://docs.vectara.com/docs/learn/metadata-search-filtering/filter-overview
+
 Each document has some default metadata filters that are automatically produced. You can find them here: https://docs.vectara.com/docs/learn/metadata-search-filtering/ootb-metadata-filters
+
 There is a fixed set of functions and operators that can be used with metadata filter expressions, which you can learn about on this page: https://docs.vectara.com/docs/api-reference/search-apis/sql/func-opr
 
 ## Query APIs
