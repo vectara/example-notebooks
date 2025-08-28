@@ -4,7 +4,7 @@
 
 **From:** Senior Equity-Research Analyst
 
-**Date:** October 26, 2024
+**Date:** September 2025
 
 **Subject:** Investment Recommendation for NVIDIA (NVDA) - Long-Term Position by October 2025
 
@@ -65,9 +65,9 @@ NVIDIA operates within the dynamic and rapidly expanding semiconductor industry,
 
 #### 2.1. TAM/SAM/SOM, Structural Growth Drivers, and Regulatory Backdrop
 
-*   **Total Addressable Market (TAM):** The global semiconductor TAM is projected to reach $1 trillion by 2030, nearly doubling from current levels, with AI workloads and accelerated computing as primary growth drivers [[Intel Q4 2023](https://financialmodelingprep.com/api/v3/earning_call_transcript/INTC?quarter=4&year=2023)]. The AI accelerator market (data center focus) is expected to grow at a 60%+ CAGR, reaching $500 billion by 2028 [[AMD Q3 2024](https://financialmodelingprep.com/api/v3/earning_call_transcript/AMD?quarter=3&year=2024)].
+*   **Total Addressable Market (TAM):** The global semiconductor TAM is projected to reach $1 trillion by 2030, nearly doubling from current levels, with AI workloads and accelerated computing as primary growth drivers [Intel Q4 2023]. The AI accelerator market (data center focus) is expected to grow at a 60%+ CAGR, reaching $500 billion by 2028 [AMD Q3 2024].
 *   **Serviceable Available Market (SAM):** NVIDIA's SAM includes the AI accelerator market in data centers (~$500B by 2028) and adjacent verticals such as automotive AI, professional visualization, and edge AI. This represents a major subset of the broader semiconductor TAM, driven by NVIDIA's comprehensive product and software ecosystem.
-*   **Serviceable Obtainable Market (SOM):** NVIDIA holds an estimated >80% share in AI data center accelerators (discrete GPUs for AI training/inference) [[Reuters, 2023](https://www.reuters.com/technology/nvidia-dominates-ai-chip-market-with-80-share-2023-08-24/)]. Considering intensifying competition, NVIDIA's SOM in AI chips and accelerated computing is conservatively 40–60% of the AI accelerator SAM through 2030, supported by its CUDA software ecosystem and high switching costs.
+*   **Serviceable Obtainable Market (SOM):** NVIDIA holds an estimated >80% share in AI data center accelerators (discrete GPUs for AI training/inference) [Reuters, 2023]. Considering intensifying competition, NVIDIA's SOM in AI chips and accelerated computing is conservatively 40–60% of the AI accelerator SAM through 2030, supported by its CUDA software ecosystem and high switching costs.
 
 **Structural Growth Drivers:**
 *   **Generative AI:** The proliferation of generative AI workloads (LLMs, copilots) creates unprecedented compute demand, expanding the traditional data center market. NVIDIA's GPU-accelerated platforms are essential for training and inference, driving Data Center revenue (+265% YoY to $47.5B in FY24) (Nvidia Q1 FY25 Earnings Call Transcript).
@@ -308,94 +308,3 @@ For direct equity positions, holding for more than one year qualifies for prefer
 ### Conclusion
 
 NVIDIA presents a compelling long-term investment opportunity, underpinned by its unparalleled leadership in AI and accelerated computing. The company's robust innovation, dominant market share, and expanding software ecosystem create a formidable competitive moat. While geopolitical risks, particularly U.S. export controls on China, and intensifying competition from custom silicon pose material challenges, NVIDIA's proactive mitigation strategies and strong financial performance support a bullish outlook. We recommend establishing a long-term position, potentially as a core holding, utilizing a blended strategy of dollar-cost averaging for core equity and tactical options overlays for risk management. Continuous monitoring of key metrics, including regulatory developments, competitive dynamics, and supply chain health, will be crucial for validating the investment thesis and managing risk through October 2025 and beyond.
-
----
-
-### References
-
-*   [AMD 10-K FY 2020-2024](https://www.sec.gov/Archives/edgar/data/2488/000000248825000012/amd-20241228.htm)
-*   [AMD Q1, Q4 2024 earnings transcripts]
-*   [AMD Q3 2024 earnings call transcript](https://financialmodelingprep.com/api/v3/earning_call_transcript/AMD?quarter=3&year=2024)
-*   [AMD Q4 2024 earnings transcript]
-*   [Amazon Q4 2024 earnings call transcript](https://financialmodelingprep.com/api/v3/earning_call_transcript/AMZN?quarter=4&year=2024)
-*   [Aurora, Continental, And NVIDIA Partner To Scale Up Driverless ... - Forbes](https://www.forbes.com/sites/richardbishop1/2025/01/06/aurora-continental-and-nvidia-partner-to-scale-up-driverless-trucks/)
-*   [Bloomberg - AI Chip Sales From Nvidia (NVDA) May Face US Curb](https://www.bloomberg.com/news/articles/2024-10-15/ai-chip-sales-from-nvidia-nvda-may-face-us-curb)
-*   [Bloomberg - Nvidia Joins $700 Million Nebius Deal For AI Cloud Services](https://www.bloomberg.com/news/articles/2024-12-02/nvidia-joins-700-million-deal-in-nebius-for-ai-cloud-services)
-*   [Bloomberg - Nvidia-Backed Cohere Forms AI Alliance With Telecom Firm BCE](https://www.bloomberg.com/news/articles/2025-07-28/nvidia-backed-cohere-forms-ai-partnership-with-telecom-firm-bce)
-*   [Bloomberg - Nvidia Traders Find Reasons to Worry Beyond Sky-High Stock Price](https://www.bloomberg.com/news/articles/2024-03-26/nvidia-traders-find-reasons-to-worry-beyond-sky-high-stock-price)
-*   [Bloomberg - Stock Rally Stalls as Fed Boost Fades, Nvidia Looms](https://www.bloomberg.com/news/videos/2025-08-25/the-close-8-25-2025-video)
-*   [Business Insider - AMD Lisa Su CEO Nvidia Competition](https://www.businessinsider.com/amd-lisa-su-ceo-nvidia-competition-2025-3)
-*   [Business Insider - Everything We Know About Nvidia's New Products and Partnerships](https://www.businessinsider.com/nvidia-new-products-partnerships-gpu-toyota-laptop-geforce-cards-autonomous-2025-1)
-*   [Business Insider - How Nvidia Got Huge—and Almost Invincible - WSJ](https://www.wsj.com/tech/ai/how-nvidia-got-hugeand-almost-invincible-da74cae1?gaa_at=eafs&gaa_n=ASWzDAg_DQLUAOKRV-WHaN1xb8CiMdGJ2zIBltHg4RsGXUJfCInrfgbM3Lxj&gaa_ts=68af3c64&gaa_sig=jpfUCHPw1QfEa3Zg_yJNlz5bFsGDURl08bD86Jkw4xMVsd2y6oyKkftaw3TyUujGM1t30Pd1EQI-nXQsD6l0dw%3D%3D)
-*   [Business Insider - Nvidia Wants to Design Big Tech Customized AI Chips](https://www.businessinsider.com/nvidia-wants-to-design-big-tech-customized-ai-chips-2024-2)
-*   [CNBC - Dow closes at fresh record, Nasdaq ends higher as chipmakers rally](https://www.cnbc.com/2024/10/16/stock-market-today-live-updates.html)
-*   [CNBC - Leveraged Nvidia ETF issuers saw trading surge in bearish products ...](https://www.reuters.com/markets/us/leveraged-nvidia-etf-issuers-saw-trading-surge-bearish-products-ahead-earnings-2024-08-29/)
-*   [CNBC - Nvidia deal: U.S. chip curbs just 'business as usual': Ooredoo CEO](https://www.cnbc.com/2024/06/26/nvidia-deal-us-chip-curbs-just-business-as-usual-ooredoo-ceo.html)
-*   [CNBC - Nvidia dominates the AI chip market, but there's rising competition](https://www.cnbc.com/2024/06/02/nvidia-dominates-the-ai-chip-market-but-theres-rising-competition-.html)
-*   [CNBC - Nvidia-backed CoreWeave picks up $650 million credit line](https://www.cnbc.com/2024/10/11/nvidia-backed-coreweave-picks-up-650-million-credit-line.html)
-*   [CNBC - Stock market news for Jan. 29, 2025](https://www.cnbc.com/2025/01/28/stock-market-today-live-updates.html)
-*   [CNBC - Trump Nvidia, AMD China chip revenue deal implications](https://www.cnbc.com/2025/08/11/trump-nvidia-amd-china-chip-revenue-deal-implications.html)
-*   [CNBC - When selling some Nvidia makes sense for your portfolio](https://www.cnbc.com/2024/06/05/when-selling-some-nvidia-makes-sense-for-your-portfolio.html)
-*   [Core-Satellite Investing: What It Is and How It Works - Charles Schwab](https://www.schwab.com/learn/story/core-satellite-investing-what-it-and-how-it-works)
-*   [EDGAR: NVIDIA 2021, 2024, 2025 10-K]
-*   [Fidelity: How are stocks taxed?](https://www.fidelity.com/learning-center/investment-products/stocks/how-are-stocks-taxed)
-*   [Fidelity: Tax considerations for options](https://www.fidelity.com/learning-center/investment-products/options/options-tax-considerations)
-*   [Forbes - Can Nvidia Stock Hit $200 By The End Of 2025?](https://www.forbes.com/sites/investor-hub/article/can-nvidia-nvda-stock-hit-200-by-end-2025/)
-*   [Forbes - How is AMD's Fledgling AI Business Doing?](https://www.forbes.com/sites/greatspeculations/2024/05/02/how-is-amds-fledgling-ai-business-doing/)
-*   [Forbes - Magna And Nvidia Partner On Tech For Vehicles To Behave More ...](https://www.forbes.com/sites/edgarsten/2025/03/18/magna-and-nvidia-partner-on-tech-for-vehicles-to-behave-more-like-humans/)
-*   [Forbes - Nvidia Acquires OctoAI To Dominate Enterprise Generative AI ...](https://www.forbes.com/sites/janakirammsv/2024/09/30/nvidia-acquires-octoai-to-dominate-enterprise-generative-ai-solutions/)
-*   [Forbes - Nvidia And Dell Build An AI Factory Together](https://www.forbes.com/sites/stevemcdowell/2024/03/21/nvidia--dell-build-an-ai-factory-together/)
-*   [Forbes - Nvidia Just Hit $4 Trillion, But The Real AI Boom Hasn’t Started Yet](https://www.forbes.com/sites/stevenwolfepereira/2025/07/09/nvidia-just-hit-4-trillion-but-the-real-ai-boom-hasnt-started-yet/)
-*   [Forbes - Nvidia, Rigetti, Quantum Machines Deliver AI-Powered ...](https://www.forbes.com/sites/gilpress/2024/12/10/nvidia-rigetti-quantum-machines-deliver-ai-powered-quantum-computing/)
-*   [Forbes - The AI Chip Race: Who Can Compete With Nvidia?](https://www.forbes.com/sites/emilsayegh/2024/12/11/the-ai-chip-race-who-can-compete-with-nvidia/)
-*   [Forbes - Nvidia Vs. AMD Vs. Intel: Which AI Stock Is Best To Buy in March 2025](https://www.forbes.com/sites/investor-hub/article/nvidia-vs-amd-vs-intel-best-ai-stock-to-buy/)
-*   [Forbes - Nvidia Vs. AMD: Which AI Stock Better Buy Now?](https://www.forbes.com/sites/investor-hub/article/nvidia-vs-amd-which-ai-stock-better-buy-now/)
-*   [Forbes - Analyzing AMD's Next-Generation CPU, GPU, and DPU](https://www.forbes.com/sites/moorinsights/2024/10/14/analyzing-amds-next-generation-cpu-gpu-and-dpu/)
-*   [get_biography] (for Jensen Huang, Colette M. Kress, Ajay K. Puri, Debora Shoquist, Timothy S. Teter)
-*   [Intel 10-K FY 2016-2020](https://www.sec.gov/Archives/edgar/data/50863/000005086321000010/intc-20201226.htm)
-*   [Intel 10-K 2024](https://www.sec.gov/Archives/edgar/data/50863/000005086325000009/intc-20241228.htm)
-*   [Intel Q1–Q3 2024 earnings transcripts]
-*   [Intel Q3 2024 earnings call transcript](https://financialmodelingprep.com/api/v3/earning_call_transcript/INTC?quarter=3&year=2024)
-*   [Intel Q4 2023 earnings call transcript](https://financialmodelingprep.com/api/v3/earning_call_transcript/INTC?quarter=4&year=2023)
-*   [Investopedia - DCF Model](https://www.investopedia.com/terms/d/dcf.asp)
-*   [Market value of Nvidia and TSMC surges in October on strong AI ... – Reuters](https://www.reuters.com/markets/global-market-data/global-markets-marketcap-2024-11-04/)
-*   [Nvidia 10-K 2024](https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm)
-*   [Nvidia 2025 10-K](https://www.sec.gov/Archives/edgar/data/1045810/000104581025000023/nvda-20250126.htm)
-*   [Nvidia and Perplexity Team Up in European AI Push - WSJ](https://www.wsj.com/articles/nvidia-and-perplexity-team-up-in-european-ai-push-da2820fa?gaa_at=eafs&gaa_n=ASWzDAgar_BiDUhmmH0VraT2zfMBl5oXE9eZZ-nX906-r-OF2Un8vpF1amCW&gaa_ts=68af6031&gaa_sig=oGEWULPk8AebsnS6GgoylS7iJiOLwTkt_GZJixLw2hXKDkua-XyAZGP9RV-M0UHOx-gzLqFzFzTolMGUjH80IA%3D%3D)
-*   [Nvidia Partner Hon Hai's Sales Jump 24% on AI Demand - Bloomberg](https://www.bloomberg.com/news/articles/2025/04/05/nvidia-partner-hon-hai-s-sales-surge-with-data-center-boom)
-*   [Nvidia to produce AI servers worth up to $500 billion in US over four ... - Reuters](https://www.reuters.com/technology/artificial-intelligence/nvidia-says-working-with-partners-make-ai-supercomputers-us-2025-04-14/)
-*   [NVIDIA Q1 FY2025 10-Q (April 28, 2024)](https://www.sec.gov/Archives/edgar/data/1045810/000104581024000124/nvda-20240428.htm)
-*   [NVIDIA Q1 FY2026 10-Q (April 27, 2025)](https://www.sec.gov/Archives/edgar/data/1045810/000104581025000116/nvda-20250427.htm)
-*   [NVIDIA Q2 FY2025 10-Q (July 28, 2024)](https://www.sec.gov/Archives/edgar/data/1045810/000104581024000264/nvda-20240728.htm)
-*   [NVIDIA Q2 2024 earnings call transcript](https://financialmodelingprep.com/api/v3/earning_call_transcript/NVDA?quarter=2&year=2024)
-*   [NVIDIA Q3 2025 Earnings Report (Apr 2025)]
-*   [NVIDIA Q4 2024 Earnings Report (Jan 2024)]
-*   [NVIDIA Q4 2024 earnings call transcript](https://financialmodelingprep.com/api/v3/earning_call_transcript/NVDA?quarter=4&year=2024)
-*   [NVIDIA 2024 10-K, U.S. export controls and pending license status]
-*   [NVIDIA FY 2024 10-K](https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm)
-*   [NVIDIA FY 2023 10-K](https://www.sec.gov/Archives/edgar/data/1045810/000104581023000017/nvda-20230129.htm)
-*   [NVIDIA FY 2022 10-K](https://www.sec.gov/Archives/edgar/data/1045810/000104581022000036/nvda-20220130.htm)
-*   [NVIDIA FY 2021 10-K](https://www.sec.gov/Archives/edgar/data/1045810/000104581021000010/nvda-20210131.htm)
-*   [NVIDIA FY 2020 10-K](https://www.sec.gov/Archives/edgar/data/1045810/000104581020000010/nvda-2020x10k.htm)
-*   [NVIDIA FY 2019 10-K](https://www.sec.gov/Archives/edgar/data/1045810/000104581019000023/nvda-2019x10k.htm)
-*   [NVIDIA Investor Relations - SEC Filings](https://investor.nvidia.com/financial-info/sec-filings/default.aspx)
-*   [NVIDIA Proxy Statement](https://www.sec.gov/ix?doc=/Archives/edgar/data/1045810/000119312524144690/d808073ddef14a.htm)
-*   [NVIDIA Q1 FY25 Earnings Call Transcript]
-*   [NVIDIA Q4 FY24 Earnings Call Transcript]
-*   [Reuters - Nvidia dominates AI chip market with 80% share](https://www.reuters.com/technology/nvidia-dominates-ai-chip-market-with-80-share-2023-08-24/)
-*   [Reuters - Nvidia results to spotlight fallout of China-US trade war](https://www.reuters.com/world/china/nvidia-results-spotlight-fallout-china-us-trade-war-2025-08-26/)
-*   [Reuters - Nvidia's business practices in EU antitrust spotlight, sources say](https://www.reuters.com/technology/nvidias-business-practices-eu-antitrust-spotlight-sources-say-2024-12-06/)
-*   [Reuters - US licenses Nvidia to export chips to China, official says](https://www.reuters.com/world/china/us-licenses-nvidia-export-chips-china-official-says-2025-08-08/)
-*   [transcript-NVIDIA Corporation-2021-2]
-*   [transcript-NVIDIA Corporation-2022-1]
-*   [transcript-NVIDIA Corporation-2022-4]
-*   [transcript-NVIDIA Corporation-2024-3]
-*   [transcript-NVIDIA Corporation-2024-4]
-*   [transcript-NVIDIA Corporation-2025-1]
-*   [transcript-NVIDIA Corporation-2025-2]
-*   [transcript-NVIDIA Corporation-2025-3]
-*   [transcript-NVIDIA Corporation-2025-4]
-*   [WSJ - Chip Giants Intel and Nvidia Face New Threats From Amazon to Google to Apple](https://www.wsj.com/tech/chip-giants-intel-and-nvidia-face-new-threats-from-amazon-to-google-to-apple-11608460201?gaa_at=eafs&gaa_n=ASWzDAhl59CCdNXrsMa2oxsHKfvRioJyjAEBrDCE0mrUPrPU6kFDhVCUd94P&gaa_ts=68af3c7c&gaa_sig=nw4PZyJ0fDvw995lzrnOgA0q8PBSgySrtpsTrzLo6rCB-RTcXJVO0uvvt_hqIzxV4dxAigra7yCkaLlnIdaCSg%3D%3D)
-*   [WSJ - Nvidia, AMD to Give U.S. 15% Cut on AI Chip Sales to China](https://www.wsj.com/tech/nvidia-amd-chip-sales-us-government-f9e34b5f?gaa_at=eafs&gaa_n=ASWzDAhz1G5hfW0csG8kagrcrgA7bp7q2C3hwQt-CFe7JVKmSjABDqU6mK2O&gaa_ts=68af3f49&gaa_sig=Pj6L0_IbA2J7c-spoaFb--p1W5OdRzM2LXDFBFQ38MiwrDDKkPMH0umfykBE0ZMyZslGmKayWky7Ylt4kFyXvA%3D%3D)
-*   [WSJ - Nvidia's Rivals Prepare Their AI Assault](https://www.wsj.com/tech/ai/nvidias-rivals-prepare-their-ai-assault-0cf9ba01?gaa_at=eafs&gaa_n=ASWzDAgLnCm74i4H1di5Wz-FgM2Lr89Z-DSaMKYTWI2arUBEjXpOBH20lC0G&gaa_ts=68af3c64&gaa_sig=qUJHk13A-82SWGPDanqm7bk-mhR3S20ANHSXpLHtaKuGjVFlV_i4vHmzt4pK_eEwGnYCqs6XOA6QjGPWvtHPmA%3D%3D)
-*   [WSJ - 4 Semiconductor Growth Factors to Track in the Year Ahead](https://deloitte.wsj.com/cmo/4-semiconductor-growth-factors-to-track-in-the-year-ahead-0a593e46?gaa_at=eafs&gaa_n=ASWzDAgyJxm4Lda5njPls00kv3q3-r3RAL6uI36h3GXtaQD6kWOcwRdyCxz4&gaa_ts=68af3c7c&gaa_sig=2PVE1TD5GG03YSlfP2FZmy5SCD9R7OqhjRnl_LGct_qPledRPIfjaQRV0nQPK4KWpVkO1iNQ4WwoWpQ9e1yjRA%3D%3D)
