@@ -1,8 +1,11 @@
 ## Investment Memo: NVIDIA Corporation (NVDA)
 
 **To:** Buy-Side Analyst Team
+
 **From:** Senior Equity-Research Analyst
+
 **Date:** October 26, 2024
+
 **Subject:** Investment Recommendation for NVIDIA (NVDA) - Long-Term Position by October 2025
 
 ### Executive Summary
