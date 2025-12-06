@@ -1,6 +1,6 @@
 # Vectara API Tutorial Series
 
-This tutorial series provides a comprehensive, hands-on introduction to building RAG (Retrieval-Augmented Generation) applications using Vectara's REST API. Through four progressive notebooks, you'll learn to create corpora, ingest data, query information, and build intelligent AI agents.
+This tutorial series provides a comprehensive, hands-on introduction to building RAG (Retrieval-Augmented Generation) applications using Vectara's REST API. Through five progressive notebooks, you'll learn to create corpora, ingest data, query information, build intelligent AI agents, and orchestrate multi-agent workflows.
 
 ## About Vectara
 
@@ -194,6 +194,70 @@ Agent: [Provides concrete example while maintaining context]
 
 ---
 
+### [Notebook 5: Sub-Agents](5-sub-agents.ipynb)
+
+**What you'll learn:**
+- Create specialized sub-agents for domain-specific tasks
+- Configure a parent orchestrator agent that delegates to sub-agents
+- Understand session modes (ephemeral, persistent, llm_controlled)
+- Build modular, reusable agent workflows
+
+**What you'll build:**
+A **Multi-Agent Research System** with:
+1. **Research Paper Analyst**: Specialized in analyzing academic papers on RAG, embeddings, and retrieval
+2. **Documentation Expert**: Expert at finding implementation guidance from Vectara docs
+3. **Web Search Expert**: Finds current information and news from the internet
+4. **AI Research Orchestrator**: Parent agent that delegates to the specialized sub-agents
+
+**Sub-agent configuration:**
+```python
+orchestrator_config = {
+    "name": "AI Research Orchestrator",
+    "tool_configurations": {
+        "research_analyst": {
+            "type": "sub_agent",
+            "description_template": "Delegate academic research analysis tasks...",
+            "sub_agent_configuration": {
+                "agent_key": research_analyst_key,
+                "session_mode": "ephemeral"
+            }
+        },
+        "docs_expert": {
+            "type": "sub_agent",
+            "sub_agent_configuration": {
+                "agent_key": docs_expert_key,
+                "session_mode": "ephemeral"
+            }
+        },
+        "web_search_expert": {
+            "type": "sub_agent",
+            "sub_agent_configuration": {
+                "agent_key": web_search_expert_key,
+                "session_mode": "ephemeral"
+            }
+        }
+    }
+}
+```
+
+**Key concepts:**
+- **Sub-agents**: Specialized agents that handle domain-specific tasks
+- **Orchestration**: Parent agent analyzes requests and delegates to appropriate sub-agents
+- **Session modes**: Control how sub-agent sessions are managed
+  - `ephemeral`: Fresh session every time (no state leakage)
+  - `persistent`: Reuse same session (accumulate knowledge)
+  - `llm_controlled`: LLM decides whether to resume or create new
+- **Context isolation**: Each sub-agent maintains its own conversation history
+- **Parallel execution**: Run multiple sub-agents simultaneously for comprehensive answers
+
+**Benefits of sub-agents:**
+- Better performance through specialized, focused agents
+- Reduced context window pressure
+- Modular, reusable agent components
+- Cleaner separation of concerns
+
+---
+
 ## Tutorial Flow
 
 ```
@@ -212,6 +276,10 @@ Agent: [Provides concrete example while maintaining context]
 4. Agent API
    ↓
    Build autonomous agents with tools and context
+
+5. Sub-Agents
+   ↓
+   Create multi-agent workflows with specialized sub-agents
 ```
 
 ## Running the Notebooks
@@ -239,9 +307,10 @@ jupyter notebook
 
 1. **Run notebooks in order** - Each notebook builds on the previous one
 2. **Corpus keys** - Save the corpus keys from Notebook 1, you'll need them in subsequent notebooks
-3. **Agent reuse** - Notebook 4 checks if agents already exist before creating duplicates
+3. **Agent reuse** - Notebooks 4 and 5 check if agents already exist before creating duplicates
 4. **Rate limiting** - The notebooks include small delays between API calls to be respectful
 5. **Cleanup** - Consider deleting test corpora/agents when done to keep your account organized
+6. **Sub-agent dependencies** - Notebook 5 creates sub-agents first, then a parent orchestrator that references them
 
 ## Key API Endpoints Used
 
@@ -253,10 +322,12 @@ jupyter notebook
 | `POST /v2/corpora/{key}/documents` | Index documents | 2 |
 | `GET /v2/corpora/{key}/documents` | List documents | 2 |
 | `POST /v2/query` | Query corpora | 3 |
-| `POST /v2/agents` | Create agent | 4 |
-| `POST /v2/agents/{key}/sessions` | Create session | 4 |
-| `POST /v2/agents/{key}/sessions/{key}/events` | Send messages | 4 |
+| `POST /v2/agents` | Create agent | 4, 5 |
+| `POST /v2/agents/{key}/sessions` | Create session | 4, 5 |
+| `POST /v2/agents/{key}/sessions/{key}/events` | Send messages | 4, 5 |
 | `GET /v2/agents/{key}/sessions/{key}/events` | Get conversation history | 4 |
+| `GET /v2/agents` | List agents | 5 |
+| `DELETE /v2/agents/{key}` | Delete agent | 5 |
 
 ## Additional Resources
 
