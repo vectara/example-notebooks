@@ -1,6 +1,6 @@
 # Vectara API Tutorial Series
 
-This tutorial series provides a comprehensive, hands-on introduction to building RAG (Retrieval-Augmented Generation) applications using Vectara's REST API. Through five progressive notebooks, you'll learn to create corpora, ingest data, query information, build intelligent AI agents, and orchestrate multi-agent workflows.
+This tutorial series provides a comprehensive, hands-on introduction to building RAG (Retrieval-Augmented Generation) applications using Vectara's REST API. Through seven progressive notebooks, you'll learn to create corpora, ingest data, query information, build intelligent AI agents, orchestrate multi-agent workflows, work with file artifacts, and create data analysis tools with NumPy and Pandas.
 
 ## About Vectara
 
@@ -258,6 +258,77 @@ orchestrator_config = {
 
 ---
 
+### [Notebook 6: Artifacts](6-artifacts.ipynb)
+
+**What you'll learn:**
+- Upload files (PDFs, images, documents) to agent sessions
+- List and retrieve artifact details
+- Create agents with artifact-processing tools
+- Have agents analyze uploaded files and generate new artifacts
+
+**What you'll build:**
+A **Document Analyst** agent that can:
+- Read and analyze uploaded documents and images
+- Search for patterns within artifact content
+- Convert documents between formats
+- Generate new artifacts (reports, summaries)
+
+**Key concepts:**
+- **Artifacts**: Session-specific files that enable agents to work with files on-the-fly
+- **Artifact tools**: `artifact_read`, `image_read`, `document_conversion`, `artifact_grep`
+- **Two-way flow**: Users upload files, agents can generate new artifacts
+- **Session scope**: Artifacts persist within a session without permanent indexing
+
+---
+
+### [Notebook 7: Lambda Tools for Data Analysis](7-lambda-tools-data-analysis.ipynb)
+
+**What you'll learn:**
+- Create Lambda tools that use NumPy and Pandas for data analysis
+- Pass structured data (JSON) to tools and receive computed results
+- Build tools for statistical analysis, trend detection, and data transformation
+- Combine multiple data analysis tools in agent workflows
+
+**What you'll build:**
+Three **Data Analysis Lambda Tools**:
+1. **Statistical Analyzer**: Descriptive statistics, correlations, percentiles using Pandas
+2. **Trend Analyzer**: Moving averages, growth rates, linear regression using NumPy
+3. **Data Transformer**: Normalization, missing value handling, outlier removal, aggregation
+
+**Lambda tool configuration:**
+```python
+tool_config = {
+    "type": "lambda",
+    "language": "python",
+    "name": "statistical_analyzer",
+    "title": "Statistical Analyzer",
+    "description": "Compute statistics on tabular data using Pandas...",
+    "code": """
+import pandas as pd
+import numpy as np
+
+def process(data: str, columns: str = "", operations: str = "describe") -> dict:
+    df = pd.DataFrame(json.loads(data))
+    # ... compute statistics
+    return {"success": True, "statistics": {...}}
+"""
+}
+```
+
+**Key concepts:**
+- **Lambda tools execute real Python code** with NumPy and Pandas available
+- **Data passed as JSON strings** between agents and tools
+- **Precise numerical computation** that LLMs cannot reliably perform
+- **Multi-tool workflows** for comprehensive data analysis
+
+**Use cases:**
+- Financial analysis and reporting
+- Sales and marketing analytics
+- Scientific data processing
+- Time-series analysis
+
+---
+
 ## Tutorial Flow
 
 ```
@@ -280,6 +351,14 @@ orchestrator_config = {
 5. Sub-Agents
    ↓
    Create multi-agent workflows with specialized sub-agents
+
+6. Artifacts
+   ↓
+   Work with files in agent sessions
+
+7. Lambda Tools for Data Analysis
+   ↓
+   Build NumPy/Pandas-powered data analysis tools
 ```
 
 ## Running the Notebooks
@@ -322,12 +401,16 @@ jupyter notebook
 | `POST /v2/corpora/{key}/documents` | Index documents | 2 |
 | `GET /v2/corpora/{key}/documents` | List documents | 2 |
 | `POST /v2/query` | Query corpora | 3 |
-| `POST /v2/agents` | Create agent | 4, 5 |
-| `POST /v2/agents/{key}/sessions` | Create session | 4, 5 |
-| `POST /v2/agents/{key}/sessions/{key}/events` | Send messages | 4, 5 |
+| `POST /v2/agents` | Create agent | 4, 5, 6, 7 |
+| `POST /v2/agents/{key}/sessions` | Create session | 4, 5, 6, 7 |
+| `POST /v2/agents/{key}/sessions/{key}/events` | Send messages / Upload artifacts | 4, 5, 6, 7 |
 | `GET /v2/agents/{key}/sessions/{key}/events` | Get conversation history | 4 |
+| `GET /v2/agents/{key}/sessions/{key}/artifacts` | List session artifacts | 6 |
 | `GET /v2/agents` | List agents | 5 |
-| `DELETE /v2/agents/{key}` | Delete agent | 5 |
+| `DELETE /v2/agents/{key}` | Delete agent | 5, 6, 7 |
+| `POST /v2/tools` | Create Lambda tool | 5, 7 |
+| `GET /v2/tools` | List Lambda tools | 5, 7 |
+| `DELETE /v2/tools/{id}` | Delete Lambda tool | 5, 7 |
 
 ## Additional Resources
 
