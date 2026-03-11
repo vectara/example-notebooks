@@ -4,7 +4,7 @@ This tutorial series provides a comprehensive, hands-on introduction to building
 
 ## About Vectara
 
-[Vectara](https://vectara.com/) is the Agent Operating System for trusted enterprise AI: a unified Agentic RAG platform with built-in multi-modal retrieval, orchestration, and always-on governance. Deploy it on-prem (air-gapped), in your VPC, or as SaaS.
+[Vectara](https://vectara.com/) is the Agent Platform for trusted enterprise AI: a unified Agentic RAG platform with built-in multi-modal retrieval, orchestration, and always-on governance. Deploy it on-prem (air-gapped), in your VPC, or as SaaS.
 
 Key features:
 - **Simple Integration**: RESTful APIs and SDKs for Python, TypeScript, and Java
