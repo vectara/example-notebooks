@@ -1,6 +1,6 @@
 # Vectara API Tutorial Series
 
-This tutorial series provides a comprehensive, hands-on introduction to building RAG (Retrieval-Augmented Generation) applications using Vectara's REST API. Through seven progressive notebooks, you'll learn to create corpora, ingest data, query information, build intelligent AI agents, orchestrate multi-agent workflows, work with file artifacts, and create data analysis tools with NumPy and Pandas.
+This tutorial series provides a comprehensive, hands-on introduction to building RAG (Retrieval-Augmented Generation) applications using Vectara's REST API. Through eight progressive notebooks, you'll learn to create corpora, ingest data, query information, build intelligent AI agents, orchestrate multi-agent workflows, work with file artifacts, create data analysis tools with NumPy and Pandas, and use reranker instructions for domain-specific relevance tuning.
 
 ## About Vectara
 
@@ -290,10 +290,9 @@ A **Document Analyst** agent that can:
 - Combine multiple data analysis tools in agent workflows
 
 **What you'll build:**
-Three **Data Analysis Lambda Tools**:
+Two **Data Analysis Lambda Tools**:
 1. **Statistical Analyzer**: Descriptive statistics, correlations, percentiles using Pandas
 2. **Trend Analyzer**: Moving averages, growth rates, linear regression using NumPy
-3. **Data Transformer**: Normalization, missing value handling, outlier removal, aggregation
 
 **Lambda tool configuration:**
 ```python
@@ -304,6 +303,7 @@ tool_config = {
     "title": "Statistical Analyzer",
     "description": "Compute statistics on tabular data using Pandas...",
     "code": """
+import json
 import pandas as pd
 import numpy as np
 
@@ -326,6 +326,28 @@ def process(data: str, columns: str = "", operations: str = "describe") -> dict:
 - Sales and marketing analytics
 - Scientific data processing
 - Time-series analysis
+
+---
+
+### [Notebook 8: Reranker Instructions](8-reranker-instructions.ipynb)
+
+**What you'll learn:**
+- Use reranker instructions with `qwen3-reranker` to guide relevance scoring
+- Implement role-based intent steering to prioritize practical docs over academic papers
+- Create domain-specific glossaries to resolve abbreviations and jargon
+- Compare baseline reranking with instruction-guided reranking
+
+**What you'll build:**
+Three query examples demonstrating:
+1. **Baseline**: `qwen3-reranker` without instructions across both corpora
+2. **Role-based intent steering**: Instructions that prioritize practical Vectara docs for a developer audience
+3. **Abbreviation resolution**: A glossary that helps the reranker understand "HHEM" means Hughes Hallucination Evaluation Model
+
+**Key concepts:**
+- **Reranker instructions**: A text parameter that provides domain context to guide the reranker's scoring
+- **`reranker_name` vs `reranker_id`**: Notebook 8 uses `reranker_name: "qwen3-reranker"` (by name) rather than `reranker_id` (by ID) as in earlier notebooks
+- **Intent steering**: Shift result rankings toward a specific user persona without changing the query
+- **Jargon resolution**: Help the reranker bridge the gap between abbreviations in queries and full terms in documents
 
 ---
 
@@ -359,6 +381,10 @@ def process(data: str, columns: str = "", operations: str = "describe") -> dict:
 7. Lambda Tools for Data Analysis
    ↓
    Build NumPy/Pandas-powered data analysis tools
+
+8. Reranker Instructions
+   ↓
+   Guide relevance scoring with domain-specific instructions
 ```
 
 ## Running the Notebooks
@@ -400,7 +426,7 @@ jupyter notebook
 | `POST /v2/corpora/{key}/upload_file` | Upload files | 2 |
 | `POST /v2/corpora/{key}/documents` | Index documents | 2 |
 | `GET /v2/corpora/{key}/documents` | List documents | 2 |
-| `POST /v2/query` | Query corpora | 3 |
+| `POST /v2/query` | Query corpora | 3, 8 |
 | `POST /v2/agents` | Create agent | 4, 5, 6, 7 |
 | `POST /v2/agents/{key}/sessions` | Create session | 4, 5, 6, 7 |
 | `POST /v2/agents/{key}/sessions/{key}/events` | Send messages / Upload artifacts | 4, 5, 6, 7 |
