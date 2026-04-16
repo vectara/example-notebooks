@@ -1,6 +1,6 @@
 # Vectara API Tutorial Series
 
-This tutorial series provides a comprehensive, hands-on introduction to building RAG (Retrieval-Augmented Generation) applications using Vectara's REST API. Through eight progressive notebooks, you'll learn to create corpora, ingest data, query information, build intelligent AI agents, orchestrate multi-agent workflows, work with file artifacts, create data analysis tools with NumPy and Pandas, and use reranker instructions for domain-specific relevance tuning.
+This tutorial series provides a comprehensive, hands-on introduction to building RAG (Retrieval-Augmented Generation) applications using Vectara's REST API. Through ten progressive notebooks, you'll learn to create corpora, ingest data, query information, build intelligent AI agents, orchestrate multi-agent workflows, work with file artifacts, create data analysis tools with NumPy and Pandas, use reranker instructions for domain-specific relevance tuning, constrain agent output with JSON schemas and multi-step flows, and automate agents on cron or interval schedules.
 
 ## About Vectara
 
@@ -100,7 +100,7 @@ query_request = {
         "reranker": {
             "type": "chain",
             "rerankers": [
-                {"type": "customer_reranker", "reranker_id": "rnk_272725719", "limit": 30},
+                {"type": "customer_reranker", "reranker_name": "qwen3-reranker", "limit": 30},
                 {"type": "mmr", "diversity_bias": 0.05}
             ]
         }
@@ -116,7 +116,7 @@ query_request = {
 **Key concepts:**
 - **Hybrid search**: Combines semantic and keyword matching (lexical_interpolation parameter)
 - **Chain reranker**: Two-stage reranking for optimal relevance and diversity
-  - Stage 1: Customer reranker (multilingual) narrows to top 30
+  - Stage 1: `qwen3-reranker` (multilingual, referenced by name) narrows to top 30
   - Stage 2: MMR reranker adds diversity, returns top 10
 - **Factual Consistency Score (FCS)**: Detects potential hallucinations (0.0-1.0 scale)
 
@@ -345,9 +345,49 @@ Three query examples demonstrating:
 
 **Key concepts:**
 - **Reranker instructions**: A text parameter that provides domain context to guide the reranker's scoring
-- **`reranker_name` vs `reranker_id`**: Notebook 8 uses `reranker_name: "qwen3-reranker"` (by name) rather than `reranker_id` (by ID) as in earlier notebooks
+- **`reranker_name` vs `reranker_id`**: Reference a built-in reranker by name (`reranker_name: "qwen3-reranker"`) or a customer-specific one by ID (`reranker_id: "rnk_..."`) — the tutorials use `reranker_name` so they work out-of-the-box for any account
 - **Intent steering**: Shift result rankings toward a specific user persona without changing the query
 - **Jargon resolution**: Help the reranker bridge the gap between abbreviations in queries and full terms in documents
+
+---
+
+### [Notebook 9: Structured Output & Multi-Step Agents](9-structured-output-multi-step.ipynb)
+
+**What you'll learn:**
+- Constrain agent output to a JSON schema so responses are machine-parseable
+- Define multi-step agents with a classifier step that routes to specialized handlers
+- Use `next_steps` with JSONPath conditions (e.g. `get('$.output.intent')`) to drive branching
+- Mix `structured` and `default` output parsers across steps
+
+**What you'll build:**
+1. **Research Entity Extractor**: Single-step agent that returns a JSON object with `topics`, `techniques`, `confidence`, etc. — schema-enforced
+2. **Research Assistant Router**: Two-stage agent that classifies an incoming query (`research` / `implementation` / `comparison`) and routes to the matching handler step
+
+**Key concepts:**
+- **Structured output**: `output_parser: {"type": "structured", "schema": {...}, "strict": True}` guarantees valid JSON matching the declared schema
+- **Multi-step agents**: Define named steps under `steps` and declare a `first_step_name`; each step can have its own tools, instructions, and parser
+- **Conditional routing**: Use `next_steps` with JSONPath conditions on the prior step's structured output
+- **Scoped tools**: `allowed_tools: []` on a classifier step prevents tool calls during classification
+
+---
+
+### [Notebook 10: Agent Schedules](10-agent-schedules.ipynb)
+
+**What you'll learn:**
+- Automate agent execution with cron-based and interval-based schedules
+- Enable, update, and delete schedules via the REST API
+- Inspect execution history and the sessions created by scheduled runs
+
+**What you'll build:**
+A **Research Digest Generator** agent with two schedules:
+1. **Daily Research Digest**: Cron schedule `0 9 * * 1-5` (weekdays at 9 AM UTC)
+2. **Periodic Research Check**: Interval schedule `PT6H` (every 6 hours, ISO-8601)
+
+**Key concepts:**
+- **Cron vs. interval**: Use cron for wall-clock cadence (business hours, specific days); use interval for "every N hours" regardless of start time
+- **`enabled: false`**: Create schedules disabled during development and enable them once you're happy with the config
+- **`max_executions_to_keep`**: Cap retained execution history per schedule to control storage
+- **Sessions are created automatically** for each run, so you can inspect the agent's events/output for any scheduled execution
 
 ---
 
@@ -385,6 +425,14 @@ Three query examples demonstrating:
 8. Reranker Instructions
    ↓
    Guide relevance scoring with domain-specific instructions
+
+9. Structured Output & Multi-Step Agents
+   ↓
+   Constrain agent output to JSON schemas; route queries through multi-step flows
+
+10. Agent Schedules
+    ↓
+    Automate agent runs on cron or interval schedules
 ```
 
 ## Running the Notebooks
@@ -427,16 +475,21 @@ jupyter notebook
 | `POST /v2/corpora/{key}/documents` | Index documents | 2 |
 | `GET /v2/corpora/{key}/documents` | List documents | 2 |
 | `POST /v2/query` | Query corpora | 3, 8 |
-| `POST /v2/agents` | Create agent | 4, 5, 6, 7 |
-| `POST /v2/agents/{key}/sessions` | Create session | 4, 5, 6, 7 |
-| `POST /v2/agents/{key}/sessions/{key}/events` | Send messages / Upload artifacts | 4, 5, 6, 7 |
-| `GET /v2/agents/{key}/sessions/{key}/events` | Get conversation history | 4 |
+| `POST /v2/agents` | Create agent | 4, 5, 6, 7, 9, 10 |
+| `POST /v2/agents/{key}/sessions` | Create session | 4, 5, 6, 7, 9 |
+| `POST /v2/agents/{key}/sessions/{key}/events` | Send messages / Upload artifacts | 4, 5, 6, 7, 9 |
+| `GET /v2/agents/{key}/sessions/{key}/events` | Get conversation history | 4, 10 |
 | `GET /v2/agents/{key}/sessions/{key}/artifacts` | List session artifacts | 6 |
-| `GET /v2/agents` | List agents | 5 |
-| `DELETE /v2/agents/{key}` | Delete agent | 5, 6, 7 |
+| `GET /v2/agents` | List agents | 5, 9, 10 |
+| `DELETE /v2/agents/{key}` | Delete agent | 5, 6, 7, 9, 10 |
 | `POST /v2/tools` | Create Lambda tool | 5, 7 |
 | `GET /v2/tools` | List Lambda tools | 5, 7 |
 | `DELETE /v2/tools/{id}` | Delete Lambda tool | 5, 7 |
+| `POST /v2/agents/{key}/schedules` | Create schedule | 10 |
+| `GET /v2/agents/{key}/schedules` | List schedules | 10 |
+| `PATCH /v2/agents/{key}/schedules/{key}` | Update schedule | 10 |
+| `DELETE /v2/agents/{key}/schedules/{key}` | Delete schedule | 10 |
+| `GET /v2/agents/{key}/schedules/{key}/executions` | Execution history | 10 |
 
 ## Additional Resources
 
