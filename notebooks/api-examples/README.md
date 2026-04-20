@@ -458,7 +458,7 @@ jupyter notebook
 
 ## Important Notes
 
-1. **Run notebooks in order** - Each notebook builds on the previous one
+1. **Run notebooks in order** - Each notebook builds on the previous one, though notebooks 8, 9, and 10 only require the corpora from 1-2 and can be run independently of 3-7
 2. **Corpus keys** - Save the corpus keys from Notebook 1, you'll need them in subsequent notebooks
 3. **Agent reuse** - Notebooks 4 and 5 check if agents already exist before creating duplicates
 4. **Rate limiting** - The notebooks include small delays between API calls to be respectful
