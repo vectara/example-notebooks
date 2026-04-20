@@ -364,7 +364,7 @@ Three query examples demonstrating:
 2. **Research Assistant Router**: Two-stage agent that classifies an incoming query (`research` / `implementation` / `comparison`) and routes to the matching handler step
 
 **Key concepts:**
-- **Structured output**: `output_parser: {"type": "structured", "schema": {...}, "strict": True}` guarantees valid JSON matching the declared schema
+- **Structured output**: `output_parser: {"type": "structured", "json_schema": {...}, "strict": True}` guarantees valid JSON matching the declared schema
 - **Multi-step agents**: Define named steps under `steps` and declare a `first_step_name`; each step can have its own tools, instructions, and parser
 - **Conditional routing**: Use `next_steps` with JSONPath conditions on the prior step's structured output
 - **Scoped tools**: `allowed_tools: []` on a classifier step prevents tool calls during classification
