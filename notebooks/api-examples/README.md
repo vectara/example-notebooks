@@ -1,6 +1,6 @@
 # Vectara API Tutorial Series
 
-This tutorial series provides a comprehensive, hands-on introduction to building RAG (Retrieval-Augmented Generation) applications using Vectara's REST API. Through ten progressive notebooks, you'll learn to create corpora, ingest data, query information, build intelligent AI agents, orchestrate multi-agent workflows, work with file artifacts, create data analysis tools with NumPy and Pandas, use reranker instructions for domain-specific relevance tuning, constrain agent output with JSON schemas and multi-step flows, and automate agents on cron or interval schedules.
+This tutorial series provides a comprehensive, hands-on introduction to building RAG (Retrieval-Augmented Generation) applications using Vectara's REST API. Through eleven progressive notebooks, you'll learn to create corpora, ingest data, query information, build intelligent AI agents, orchestrate multi-agent workflows, work with file artifacts, create data analysis tools with NumPy and Pandas, use reranker instructions for domain-specific relevance tuning, constrain agent output with JSON schemas and multi-step flows, automate agents on cron or interval schedules, and let agents call any REST API — public or authenticated, read or write — with the `web_get` tool.
 
 ## About Vectara
 
@@ -391,6 +391,31 @@ A **Research Digest Generator** agent with two schedules:
 
 ---
 
+### [Notebook 11: Calling REST APIs with `web_get`](11-web-get-tool.ipynb)
+
+**What you'll learn:**
+- Configure an agent with the inline `web_get` tool — a general-purpose HTTP client supporting `GET`/`POST`/`PUT`/`DELETE`/`HEAD`, custom headers, and request bodies
+- Have the agent call a real REST API end-to-end (the demo uses public Open-Meteo so it runs out of the box; the same patterns apply to authenticated APIs and write/state-changing endpoints)
+- Inspect `tool_input` / `tool_output` events to see exactly which request the agent made and what it got back
+- Constrain the tool with `argument_override` to pin auth headers, method, timeout, and response-size limits in production
+- Compare two integration patterns: a single generic `web_get` with endpoint guidance in the system prompt, vs. multiple specialized `web_get` registrations (one per operation) for sharper tool selection and per-operation guardrails
+
+**What you'll build:**
+A **Weather Assistant** agent that answers natural-language weather questions by chaining two calls to the [Open-Meteo](https://open-meteo.com/) public API (no signup required):
+1. Geocode the city via `geocoding-api.open-meteo.com/v1/search`
+2. Fetch current conditions via `api.open-meteo.com/v1/forecast`
+
+The notebook implements the same agent twice — once with a single `web_get` tool, then with two specialized tools (`geocode_city`, `get_current_weather`) — so you can see the trade-offs in the trace.
+
+**Key concepts:**
+- **`web_get` vs. `web_search`**: `web_get` issues an HTTP request to a specific endpoint the LLM (or your `argument_override`) chooses; `web_search` goes through a search engine. Use `web_get` for calling specific REST APIs — public or private, read or write.
+- **`argument_override`**: Hardcode any subset of `WebGetToolParameters` (`url`, `method`, `headers`, `body`, `follow_redirects`, `timeout_seconds`, `max_content_bytes`, `ssl_verify`, `head_lines`/`tail_lines`). Pin an `Authorization` header for authenticated APIs, pin `method` to enforce read-only or write-only behavior, pin `url` when the agent should only talk to one endpoint.
+- **Single tool vs. specialized tools**: A single `web_get` is fine for tutorials and one-off agents. For production, register `web_get` multiple times under different names — each with its own `description_template` and `argument_override` — to get sharper tool selection, per-operation auth/limits, and cleaner per-capability telemetry.
+- **`web_get` argument shape**: The LLM-fillable arguments are HTTP-level (`url`/`method`/`headers`/`body`/...), not domain-typed (`city: str`). When you need typed function arguments, use `lambda` (in-process Python, no network) or `InlineMcpToolConfiguration` (external MCP server with proper typed functions).
+- **Self-contained notebook**: requires only `VECTARA_API_KEY` (no corpora from earlier notebooks).
+
+---
+
 ## Tutorial Flow
 
 ```
@@ -433,6 +458,10 @@ A **Research Digest Generator** agent with two schedules:
 10. Agent Schedules
     ↓
     Automate agent runs on cron or interval schedules
+
+11. Calling REST APIs with web_get
+    ↓
+    Give an agent the inline web_get tool to call any REST API (public or authenticated, read or write) at conversation time
 ```
 
 ## Running the Notebooks
@@ -458,7 +487,7 @@ jupyter notebook
 
 ## Important Notes
 
-1. **Run notebooks in order** - Each notebook builds on the previous one, though notebooks 8, 9, and 10 only require the corpora from 1-2 and can be run independently of 3-7
+1. **Run notebooks in order** - Each notebook builds on the previous one, though notebooks 8, 9, and 10 only require the corpora from 1-2 and can be run independently of 3-7. Notebook 11 is fully self-contained and only needs a `VECTARA_API_KEY`.
 2. **Corpus keys** - Save the corpus keys from Notebook 1, you'll need them in subsequent notebooks
 3. **Agent reuse** - Notebooks 4 and 5 check if agents already exist before creating duplicates
 4. **Rate limiting** - The notebooks include small delays between API calls to be respectful
@@ -475,13 +504,13 @@ jupyter notebook
 | `POST /v2/corpora/{key}/documents` | Index documents | 2 |
 | `GET /v2/corpora/{key}/documents` | List documents | 2 |
 | `POST /v2/query` | Query corpora | 3, 8 |
-| `POST /v2/agents` | Create agent | 4, 5, 6, 7, 9, 10 |
-| `POST /v2/agents/{key}/sessions` | Create session | 4, 5, 6, 7, 9 |
-| `POST /v2/agents/{key}/sessions/{key}/events` | Send messages / Upload artifacts | 4, 5, 6, 7, 9 |
+| `POST /v2/agents` | Create agent | 4, 5, 6, 7, 9, 10, 11 |
+| `POST /v2/agents/{key}/sessions` | Create session | 4, 5, 6, 7, 9, 11 |
+| `POST /v2/agents/{key}/sessions/{key}/events` | Send messages / Upload artifacts | 4, 5, 6, 7, 9, 11 |
 | `GET /v2/agents/{key}/sessions/{key}/events` | Get conversation history | 4, 10 |
 | `GET /v2/agents/{key}/sessions/{key}/artifacts` | List session artifacts | 6 |
 | `GET /v2/agents` | List agents | 5, 9, 10 |
-| `DELETE /v2/agents/{key}` | Delete agent | 5, 6, 7, 9, 10 |
+| `DELETE /v2/agents/{key}` | Delete agent | 5, 6, 7, 9, 10, 11 |
 | `POST /v2/tools` | Create Lambda tool | 5, 7 |
 | `GET /v2/tools` | List Lambda tools | 5, 7 |
 | `DELETE /v2/tools/{id}` | Delete Lambda tool | 5, 7 |
