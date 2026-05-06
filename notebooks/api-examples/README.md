@@ -1,6 +1,6 @@
 # Vectara API Tutorial Series
 
-This tutorial series provides a comprehensive, hands-on introduction to building RAG (Retrieval-Augmented Generation) applications using Vectara's REST API. Through ten progressive notebooks, you'll learn to create corpora, ingest data, query information, build intelligent AI agents, orchestrate multi-agent workflows, work with file artifacts, create data analysis tools with NumPy and Pandas, use reranker instructions for domain-specific relevance tuning, constrain agent output with JSON schemas and multi-step flows, and automate agents on cron or interval schedules.
+This tutorial series provides a comprehensive, hands-on introduction to building RAG (Retrieval-Augmented Generation) applications using Vectara's REST API. Through thirteen progressive notebooks, you'll learn to create corpora, ingest data, query information, build intelligent AI agents, orchestrate multi-agent workflows, work with file artifacts, create data analysis tools with NumPy and Pandas, use reranker instructions for domain-specific relevance tuning, constrain agent output with JSON schemas and multi-step flows, automate agents on cron or interval schedules, let agents call any REST API — public or authenticated, read or write — with the `web_get` tool, use **agent skills** to load specialist instructions on demand, and drive an agent through deterministic multi-phase pipelines using **agent steps**.
 
 ## About Vectara
 
@@ -391,6 +391,72 @@ A **Research Digest Generator** agent with two schedules:
 
 ---
 
+### [Notebook 11: Calling REST APIs with `web_get`](11-web-get-tool.ipynb)
+
+**What you'll learn:**
+- Configure an agent with the inline `web_get` tool — a general-purpose HTTP client supporting `GET`/`POST`/`PUT`/`DELETE`/`HEAD`, custom headers, and request bodies
+- Have the agent call a real REST API end-to-end (the demo uses public Open-Meteo so it runs out of the box; the same patterns apply to authenticated APIs and write/state-changing endpoints)
+- Inspect `tool_input` / `tool_output` events to see exactly which request the agent made and what it got back
+- Constrain the tool with `argument_override` to pin auth headers, method, timeout, and response-size limits in production
+- Compare two integration patterns: a single generic `web_get` with endpoint guidance in the system prompt, vs. multiple specialized `web_get` registrations (one per operation) for sharper tool selection and per-operation guardrails
+
+**What you'll build:**
+A **Weather Assistant** agent that answers natural-language weather questions by chaining two calls to the [Open-Meteo](https://open-meteo.com/) public API (no signup required):
+1. Geocode the city via `geocoding-api.open-meteo.com/v1/search`
+2. Fetch current conditions via `api.open-meteo.com/v1/forecast`
+
+The notebook iterates the agent through several configurations — a single generic `web_get`, a locked-down version with `argument_override`, specialized per-operation tools (`geocode_city`, `get_current_weather`), a POST tool that pushes a real notification via ntfy.sh, and a deliberately broken endpoint to demo failure handling — so you can see the trade-offs in each trace.
+
+**Key concepts:**
+- **`web_get` vs. `web_search`**: `web_get` issues an HTTP request to a specific endpoint the LLM (or your `argument_override`) chooses; `web_search` goes through a search engine. Use `web_get` for calling specific REST APIs — public or private, read or write.
+- **`argument_override`**: Hardcode any subset of `WebGetToolParameters` (`url`, `method`, `headers`, `body`, `follow_redirects`, `timeout_seconds`, `max_content_bytes`, `ssl_verify`, `head_lines`/`tail_lines`). Pin an `Authorization` header for authenticated APIs, pin `method` to enforce read-only or write-only behavior, pin `url` when the agent should only talk to one endpoint.
+- **Single tool vs. specialized tools**: A single `web_get` is fine for tutorials and one-off agents. For production, register `web_get` multiple times under different names — each with its own `description_template` and `argument_override` — to get sharper tool selection, per-operation auth/limits, and cleaner per-capability telemetry.
+- **`web_get` argument shape**: The LLM-fillable arguments are HTTP-level (`url`/`method`/`headers`/`body`/...), not domain-typed (`city: str`). When you need typed function arguments, use `lambda` (in-process Python, no network) or `InlineMcpToolConfiguration` (external MCP server with proper typed functions).
+- **Self-contained notebook**: requires only `VECTARA_API_KEY` (no corpora from earlier notebooks).
+
+---
+
+### [Notebook 12: Agent Skills — Progressive-Disclosure Instructions](12-agent-skills.ipynb)
+
+**What you'll learn:**
+- Configure an agent with a `skills` map — each skill is just `{description, content}` (caps: 500 / 50,000 chars)
+- Watch the agent autonomously invoke a skill via the auto-exposed `invoke_skill` tool, and inspect the resulting `skill_load` event
+- Trigger a skill from the client by sending an input message of type `"skill"` (no LLM round-trip needed for the decision)
+- Define multiple skills and let the model pick the right one per question
+- Use per-step `allowed_skills` to restrict which skills are available in a given step of a multi-step agent
+
+**What you'll build:**
+A **Support Copilot** agent whose system prompt stays small. A `customer_escalation` skill is registered with a short description (always visible to the model) and a long structured runbook — severity rubric, routing rules, draft-reply template, and an internal handoff note — that loads only when an inbound message actually looks like an outage or angry customer. A second `feature_request_intake` skill is added so you can see the model select between the two on different inbound messages (an SSO/Okta ask vs. a missing-dashboards incident).
+
+**Key concepts:**
+- **Progressive disclosure**: only the *short description* lives in the system prompt every turn; the heavy *content* enters context lazily — the token-economy win that makes skills different from just-stuff-the-prompt.
+- **Two invocation paths**: `invoke_skill` is an auto-exposed tool the model can call; alternatively, the client can preload by sending `{"type": "skill", "skill_name": "..."}` in an event's `messages` array (e.g. a monitoring webhook that forces escalation mode). Both paths produce a `skill_load` event.
+- **Skill vs. tool vs. sub-agent**: skills load *instructions*, tools provide *capabilities*, sub-agents bring their own *flow*. A common Vectara pairing: `corpora_search` over your help-center / runbook corpus answers "what's true," while skills answer "what should I do about it."
+- **Self-contained notebook**: requires only `VECTARA_API_KEY` (no corpora from earlier notebooks).
+
+---
+
+### [Notebook 13: Agent Steps — Deterministic Plan Execution](13-agent-steps.ipynb)
+
+**What you'll learn:**
+- Build a sequential **plan-then-execute pipeline** where each phase has its own focused system prompt, tools, and structured-output schema
+- Trace `step_transition` and `structured_output` events to make the deterministic flow visible
+- Add a **conditional gate** that routes around expensive phases when prior output indicates they aren't needed
+- Use **`reentry_step`** so follow-up turns enter a Q&A phase instead of re-running the whole pipeline
+- Choose between steps, sub-agents, skills, and a single comprehensive prompt
+
+**What you'll build:**
+A **Contract Triage** agent that processes inbound documents through three sequential phases — `classify` (what kind of document is this?) → `extract` (pull key fields like parties, term, governing law) → `flag_issues` (Markdown risk-flag report). A second variant adds a conditional gate that exits early for inputs that aren't actually contracts. A third variant adds a `qa` step with `reentry_step` wired up so follow-up questions land in a dedicated Q&A phase that reuses already-extracted fields without re-running the pipeline.
+
+**Key concepts:**
+- **Steps vs. sub-agents**: steps share session history (each later phase can read what earlier phases produced); sub-agents start fresh in their own context. Steps are the right tool when phases need to *build on* each other.
+- **Conditional transitions**: `next_steps` entries with UserFn `condition` expressions (`get('$.output.doc_type') == 'other'`) route on **typed structured-output fields**, not on the LLM's free-form text — the deterministic part of "deterministic plan execution".
+- **`reentry_step`**: where the *next* user message in the same session lands. Use it to separate *one-shot pipeline runs* from *ongoing Q&A about what the pipeline produced*.
+- **How this differs from notebook 9**: notebook 9 covers the **classifier-router fan-out** (one classifier branches to one of N terminal handlers). This notebook covers **sequential pipelines**, **conditional gating**, and **`reentry_step`** — read both for the full step-orchestration picture.
+- **Self-contained notebook**: requires only `VECTARA_API_KEY` (no corpora from earlier notebooks).
+
+---
+
 ## Tutorial Flow
 
 ```
@@ -433,6 +499,18 @@ A **Research Digest Generator** agent with two schedules:
 10. Agent Schedules
     ↓
     Automate agent runs on cron or interval schedules
+
+11. Calling REST APIs with web_get
+    ↓
+    Give an agent the inline web_get tool to call any REST API (public or authenticated, read or write) at conversation time
+
+12. Agent Skills
+    ↓
+    Attach progressive-disclosure instructions (description + content) so specialist guidance only enters context when the agent invokes it
+
+13. Agent Steps — Deterministic Plan Execution
+    ↓
+    Drive an agent through a fixed sequence of phases (classify → extract → flag_issues) with conditional gates and reentry_step for follow-up Q&A
 ```
 
 ## Running the Notebooks
@@ -458,7 +536,7 @@ jupyter notebook
 
 ## Important Notes
 
-1. **Run notebooks in order** - Each notebook builds on the previous one, though notebooks 8, 9, and 10 only require the corpora from 1-2 and can be run independently of 3-7
+1. **Run notebooks in order** - Each notebook builds on the previous one, though notebooks 8, 9, and 10 only require the corpora from 1-2 and can be run independently of 3-7. Notebooks 11, 12, and 13 are fully self-contained and only need a `VECTARA_API_KEY`.
 2. **Corpus keys** - Save the corpus keys from Notebook 1, you'll need them in subsequent notebooks
 3. **Agent reuse** - Notebooks 4 and 5 check if agents already exist before creating duplicates
 4. **Rate limiting** - The notebooks include small delays between API calls to be respectful
@@ -475,13 +553,13 @@ jupyter notebook
 | `POST /v2/corpora/{key}/documents` | Index documents | 2 |
 | `GET /v2/corpora/{key}/documents` | List documents | 2 |
 | `POST /v2/query` | Query corpora | 3, 8 |
-| `POST /v2/agents` | Create agent | 4, 5, 6, 7, 9, 10 |
-| `POST /v2/agents/{key}/sessions` | Create session | 4, 5, 6, 7, 9 |
-| `POST /v2/agents/{key}/sessions/{key}/events` | Send messages / Upload artifacts | 4, 5, 6, 7, 9 |
+| `POST /v2/agents` | Create agent | 4, 5, 6, 7, 9, 10, 11, 12, 13 |
+| `POST /v2/agents/{key}/sessions` | Create session | 4, 5, 6, 7, 9, 11, 12, 13 |
+| `POST /v2/agents/{key}/sessions/{key}/events` | Send messages / Upload artifacts | 4, 5, 6, 7, 9, 11, 12, 13 |
 | `GET /v2/agents/{key}/sessions/{key}/events` | Get conversation history | 4, 10 |
 | `GET /v2/agents/{key}/sessions/{key}/artifacts` | List session artifacts | 6 |
 | `GET /v2/agents` | List agents | 5, 9, 10 |
-| `DELETE /v2/agents/{key}` | Delete agent | 5, 6, 7, 9, 10 |
+| `DELETE /v2/agents/{key}` | Delete agent | 5, 6, 7, 9, 10, 11, 12, 13 |
 | `POST /v2/tools` | Create Lambda tool | 5, 7 |
 | `GET /v2/tools` | List Lambda tools | 5, 7 |
 | `DELETE /v2/tools/{id}` | Delete Lambda tool | 5, 7 |
