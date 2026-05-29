@@ -1,6 +1,6 @@
 # Vectara API Tutorial Series
 
-This tutorial series provides a comprehensive, hands-on introduction to building RAG (Retrieval-Augmented Generation) applications using Vectara's REST API. Through thirteen progressive notebooks, you'll learn to create corpora, ingest data, query information, build intelligent AI agents, orchestrate multi-agent workflows, work with file artifacts, create data analysis tools with NumPy and Pandas, use reranker instructions for domain-specific relevance tuning, constrain agent output with JSON schemas and multi-step flows, automate agents on cron or interval schedules, let agents call any REST API — public or authenticated, read or write — with the `web_get` tool, use **agent skills** to load specialist instructions on demand, and drive an agent through deterministic multi-phase pipelines using **agent steps**.
+This tutorial series provides a comprehensive, hands-on introduction to building RAG (Retrieval-Augmented Generation) applications using Vectara's REST API. Through fourteen progressive notebooks, you'll learn to create corpora, ingest data, delete documents, query information, build intelligent AI agents, orchestrate multi-agent workflows, work with file artifacts, create data analysis tools with NumPy and Pandas, use reranker instructions for domain-specific relevance tuning, constrain agent output with JSON schemas and multi-step flows, automate agents on cron or interval schedules, let agents call any REST API — public or authenticated, read or write — with the `web_get` tool, use **agent skills** to load specialist instructions on demand, and drive an agent through deterministic multi-phase pipelines using **agent steps**.
 
 ## About Vectara
 
@@ -78,7 +78,30 @@ Two corpora with different purposes:
 
 ---
 
-### [Notebook 3: Query API](3-query-api.ipynb)
+### [Notebook 3: Deleting Documents](3-document-deletion.ipynb)
+
+**What you'll learn:**
+- Delete a single document by its ID
+- Bulk delete documents by metadata filter (`metadata_filter`) or by a list of document IDs
+- Delete all documents at once by resetting a corpus
+- List documents (optionally filtered by metadata) to verify deletions
+
+**What you'll build:**
+A self-contained walkthrough on its own `tutorial-document-deletion` corpus:
+1. Create the corpus and add six small documents (four with `category`/`year` metadata, two without)
+2. Delete one document by ID
+3. Bulk delete every `finance` document with a metadata filter
+4. Reset the corpus to remove everything, then optionally delete the corpus
+
+**Key concepts:**
+- **Single-document delete**: `DELETE /v2/corpora/{corpus_key}/documents/{document_id}`
+- **Bulk delete**: `DELETE /v2/corpora/{corpus_key}/documents` with `metadata_filter` and/or `document_ids` (async by default; pass `async=false` to wait for results)
+- **Corpus reset**: `POST /v2/corpora/{corpus_key}/reset` empties a corpus but keeps its configuration
+- **Self-contained**: creates and owns its corpus, so it needs only a `VECTARA_API_KEY` and doesn't affect the other notebooks
+
+---
+
+### [Notebook 4: Query API](4-query-api.ipynb)
 
 **What you'll learn:**
 - Execute basic queries with hybrid search
@@ -134,7 +157,7 @@ Stream generated responses in real-time using Server-Sent Events for better UX.
 
 ---
 
-### [Notebook 4: Agent API](4-agent-api.ipynb)
+### [Notebook 5: Agent API](5-agent-api.ipynb)
 
 **What you'll learn:**
 - Create AI agents with custom instructions
@@ -194,7 +217,7 @@ Agent: [Provides concrete example while maintaining context]
 
 ---
 
-### [Notebook 5: Sub-Agents](5-sub-agents.ipynb)
+### [Notebook 6: Sub-Agents](6-sub-agents.ipynb)
 
 **What you'll learn:**
 - Create specialized sub-agents for domain-specific tasks
@@ -258,7 +281,7 @@ orchestrator_config = {
 
 ---
 
-### [Notebook 6: Artifacts](6-artifacts.ipynb)
+### [Notebook 7: Artifacts](7-artifacts.ipynb)
 
 **What you'll learn:**
 - Upload files (PDFs, images, documents) to agent sessions
@@ -281,7 +304,7 @@ A **Document Analyst** agent that can:
 
 ---
 
-### [Notebook 7: Lambda Tools for Data Analysis](7-lambda-tools-data-analysis.ipynb)
+### [Notebook 8: Lambda Tools for Data Analysis](8-lambda-tools-data-analysis.ipynb)
 
 **What you'll learn:**
 - Create Lambda tools that use NumPy and Pandas for data analysis
@@ -329,7 +352,7 @@ def process(data: str, columns: str = "", operations: str = "describe") -> dict:
 
 ---
 
-### [Notebook 8: Reranker Instructions](8-reranker-instructions.ipynb)
+### [Notebook 9: Reranker Instructions](9-reranker-instructions.ipynb)
 
 **What you'll learn:**
 - Use reranker instructions with `qwen3-reranker` to guide relevance scoring
@@ -351,7 +374,7 @@ Three query examples demonstrating:
 
 ---
 
-### [Notebook 9: Structured Output & Multi-Step Agents](9-structured-output-multi-step.ipynb)
+### [Notebook 10: Structured Output & Multi-Step Agents](10-structured-output-multi-step.ipynb)
 
 **What you'll learn:**
 - Constrain agent output to a JSON schema so responses are machine-parseable
@@ -371,7 +394,7 @@ Three query examples demonstrating:
 
 ---
 
-### [Notebook 10: Agent Schedules](10-agent-schedules.ipynb)
+### [Notebook 11: Agent Schedules](11-agent-schedules.ipynb)
 
 **What you'll learn:**
 - Automate agent execution with cron-based and interval-based schedules
@@ -391,7 +414,7 @@ A **Research Digest Generator** agent with two schedules:
 
 ---
 
-### [Notebook 11: Calling REST APIs with `web_get`](11-web-get-tool.ipynb)
+### [Notebook 12: Calling REST APIs with `web_get`](12-web-get-tool.ipynb)
 
 **What you'll learn:**
 - Configure an agent with the inline `web_get` tool — a general-purpose HTTP client supporting `GET`/`POST`/`PUT`/`DELETE`/`HEAD`, custom headers, and request bodies
@@ -416,7 +439,7 @@ The notebook iterates the agent through several configurations — a single gene
 
 ---
 
-### [Notebook 12: Agent Skills — Progressive-Disclosure Instructions](12-agent-skills.ipynb)
+### [Notebook 13: Agent Skills — Progressive-Disclosure Instructions](13-agent-skills.ipynb)
 
 **What you'll learn:**
 - Configure an agent with a `skills` map — each skill is just `{description, content}` (caps: 500 / 50,000 chars)
@@ -436,7 +459,7 @@ A **Support Copilot** agent whose system prompt stays small. A `customer_escalat
 
 ---
 
-### [Notebook 13: Agent Steps — Deterministic Plan Execution](13-agent-steps.ipynb)
+### [Notebook 14: Agent Steps — Deterministic Plan Execution](14-agent-steps.ipynb)
 
 **What you'll learn:**
 - Build a sequential **plan-then-execute pipeline** where each phase has its own focused system prompt, tools, and structured-output schema
@@ -452,7 +475,7 @@ A **Contract Triage** agent that processes inbound documents through three seque
 - **Steps vs. sub-agents**: steps share session history (each later phase can read what earlier phases produced); sub-agents start fresh in their own context. Steps are the right tool when phases need to *build on* each other.
 - **Conditional transitions**: `next_steps` entries with UserFn `condition` expressions (`get('$.output.doc_type') == 'other'`) route on **typed structured-output fields**, not on the LLM's free-form text — the deterministic part of "deterministic plan execution".
 - **`reentry_step`**: where the *next* user message in the same session lands. Use it to separate *one-shot pipeline runs* from *ongoing Q&A about what the pipeline produced*.
-- **How this differs from notebook 9**: notebook 9 covers the **classifier-router fan-out** (one classifier branches to one of N terminal handlers). This notebook covers **sequential pipelines**, **conditional gating**, and **`reentry_step`** — read both for the full step-orchestration picture.
+- **How this differs from notebook 10**: notebook 10 covers the **classifier-router fan-out** (one classifier branches to one of N terminal handlers). This notebook covers **sequential pipelines**, **conditional gating**, and **`reentry_step`** — read both for the full step-orchestration picture.
 - **Self-contained notebook**: requires only `VECTARA_API_KEY` (no corpora from earlier notebooks).
 
 ---
@@ -468,47 +491,51 @@ A **Contract Triage** agent that processes inbound documents through three seque
    ↓
    Upload PDFs + Index crawled documentation
 
-3. Query API
+3. Deleting Documents
+   ↓
+   Remove documents by ID or metadata filter; reset a corpus
+
+4. Query API
    ↓
    Search, filter, rerank, and generate answers
 
-4. Agent API
+5. Agent API
    ↓
    Build autonomous agents with tools and context
 
-5. Sub-Agents
+6. Sub-Agents
    ↓
    Create multi-agent workflows with specialized sub-agents
 
-6. Artifacts
+7. Artifacts
    ↓
    Work with files in agent sessions
 
-7. Lambda Tools for Data Analysis
+8. Lambda Tools for Data Analysis
    ↓
    Build NumPy/Pandas-powered data analysis tools
 
-8. Reranker Instructions
+9. Reranker Instructions
    ↓
    Guide relevance scoring with domain-specific instructions
 
-9. Structured Output & Multi-Step Agents
-   ↓
-   Constrain agent output to JSON schemas; route queries through multi-step flows
+10. Structured Output & Multi-Step Agents
+    ↓
+    Constrain agent output to JSON schemas; route queries through multi-step flows
 
-10. Agent Schedules
+11. Agent Schedules
     ↓
     Automate agent runs on cron or interval schedules
 
-11. Calling REST APIs with web_get
+12. Calling REST APIs with web_get
     ↓
     Give an agent the inline web_get tool to call any REST API (public or authenticated, read or write) at conversation time
 
-12. Agent Skills
+13. Agent Skills
     ↓
     Attach progressive-disclosure instructions (description + content) so specialist guidance only enters context when the agent invokes it
 
-13. Agent Steps — Deterministic Plan Execution
+14. Agent Steps — Deterministic Plan Execution
     ↓
     Drive an agent through a fixed sequence of phases (classify → extract → flag_issues) with conditional gates and reentry_step for follow-up Q&A
 ```
@@ -536,38 +563,42 @@ jupyter notebook
 
 ## Important Notes
 
-1. **Run notebooks in order** - Each notebook builds on the previous one, though notebooks 8, 9, and 10 only require the corpora from 1-2 and can be run independently of 3-7. Notebooks 11, 12, and 13 are fully self-contained and only need a `VECTARA_API_KEY`.
+1. **Run notebooks in order** - Each notebook builds on the previous one, though notebooks 9, 10, and 11 only require the corpora from 1-2 and can be run independently of 4-8. Notebooks 3, 12, 13, and 14 are fully self-contained and only need a `VECTARA_API_KEY`.
 2. **Corpus keys** - Save the corpus keys from Notebook 1, you'll need them in subsequent notebooks
-3. **Agent reuse** - Notebooks 4 and 5 check if agents already exist before creating duplicates
+3. **Agent reuse** - Notebooks 5 and 6 check if agents already exist before creating duplicates
 4. **Rate limiting** - The notebooks include small delays between API calls to be respectful
 5. **Cleanup** - Consider deleting test corpora/agents when done to keep your account organized
-6. **Sub-agent dependencies** - Notebook 5 creates sub-agents first, then a parent orchestrator that references them
+6. **Sub-agent dependencies** - Notebook 6 creates sub-agents first, then a parent orchestrator that references them
 
 ## Key API Endpoints Used
 
 | Endpoint | Purpose | Notebook |
 |----------|---------|----------|
-| `POST /v2/corpora` | Create corpus | 1 |
+| `POST /v2/corpora` | Create corpus | 1, 3 |
 | `GET /v2/corpora` | List corpora | 1 |
 | `POST /v2/corpora/{key}/upload_file` | Upload files | 2 |
-| `POST /v2/corpora/{key}/documents` | Index documents | 2 |
-| `GET /v2/corpora/{key}/documents` | List documents | 2 |
-| `POST /v2/query` | Query corpora | 3, 8 |
-| `POST /v2/agents` | Create agent | 4, 5, 6, 7, 9, 10, 11, 12, 13 |
-| `POST /v2/agents/{key}/sessions` | Create session | 4, 5, 6, 7, 9, 11, 12, 13 |
-| `POST /v2/agents/{key}/sessions/{key}/events` | Send messages / Upload artifacts | 4, 5, 6, 7, 9, 11, 12, 13 |
-| `GET /v2/agents/{key}/sessions/{key}/events` | Get conversation history | 4, 10 |
-| `GET /v2/agents/{key}/sessions/{key}/artifacts` | List session artifacts | 6 |
-| `GET /v2/agents` | List agents | 5, 9, 10 |
-| `DELETE /v2/agents/{key}` | Delete agent | 5, 6, 7, 9, 10, 11, 12, 13 |
-| `POST /v2/tools` | Create Lambda tool | 5, 7 |
-| `GET /v2/tools` | List Lambda tools | 5, 7 |
-| `DELETE /v2/tools/{id}` | Delete Lambda tool | 5, 7 |
-| `POST /v2/agents/{key}/schedules` | Create schedule | 10 |
-| `GET /v2/agents/{key}/schedules` | List schedules | 10 |
-| `PATCH /v2/agents/{key}/schedules/{key}` | Update schedule | 10 |
-| `DELETE /v2/agents/{key}/schedules/{key}` | Delete schedule | 10 |
-| `GET /v2/agents/{key}/schedules/{key}/executions` | Execution history | 10 |
+| `POST /v2/corpora/{key}/documents` | Index documents | 2, 3 |
+| `GET /v2/corpora/{key}/documents` | List documents | 2, 3 |
+| `DELETE /v2/corpora/{key}/documents/{id}` | Delete one document | 3 |
+| `DELETE /v2/corpora/{key}/documents` | Bulk delete documents (metadata filter / IDs) | 3 |
+| `POST /v2/corpora/{key}/reset` | Delete all documents (reset corpus) | 3 |
+| `DELETE /v2/corpora/{key}` | Delete corpus | 3 |
+| `POST /v2/query` | Query corpora | 4, 9 |
+| `POST /v2/agents` | Create agent | 5, 6, 7, 8, 10, 11, 12, 13, 14 |
+| `POST /v2/agents/{key}/sessions` | Create session | 5, 6, 7, 8, 10, 12, 13, 14 |
+| `POST /v2/agents/{key}/sessions/{key}/events` | Send messages / Upload artifacts | 5, 6, 7, 8, 10, 12, 13, 14 |
+| `GET /v2/agents/{key}/sessions/{key}/events` | Get conversation history | 5, 11 |
+| `GET /v2/agents/{key}/sessions/{key}/artifacts` | List session artifacts | 7 |
+| `GET /v2/agents` | List agents | 6, 10, 11 |
+| `DELETE /v2/agents/{key}` | Delete agent | 6, 7, 8, 10, 11, 12, 13, 14 |
+| `POST /v2/tools` | Create Lambda tool | 6, 8 |
+| `GET /v2/tools` | List Lambda tools | 6, 8 |
+| `DELETE /v2/tools/{id}` | Delete Lambda tool | 6, 8 |
+| `POST /v2/agents/{key}/schedules` | Create schedule | 11 |
+| `GET /v2/agents/{key}/schedules` | List schedules | 11 |
+| `PATCH /v2/agents/{key}/schedules/{key}` | Update schedule | 11 |
+| `DELETE /v2/agents/{key}/schedules/{key}` | Delete schedule | 11 |
+| `GET /v2/agents/{key}/schedules/{key}/executions` | Execution history | 11 |
 
 ## Additional Resources
 
