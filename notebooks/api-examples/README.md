@@ -487,7 +487,7 @@ A **Contract Triage** agent that processes inbound documents through three seque
 - Register the exact ACL metadata fields ([`acl_owners`, `acl_readers`, `acl_groups`, `acl_domains`, ...](https://github.com/vectara/vectara-ingest/blob/main/crawlers/CRAWLERS.md#google-drive-crawler)) that vectara-ingest's `gdrive_crawler` emits in ABAC mode, and build a query-time filter that ORs a user's email, groups, and domain against them
 - Store agent-level credentials via the dedicated Agent Secrets API (`PATCH /v2/agents/{agent_key}/secrets`) and confirm they're always masked (`****`) on read
 - Use an **indirect** `$ref` (`agent.secrets[session.metadata.tenant_id]`) so one tool configuration picks a different stored secret per session
-- Confirm in the raw event trace that a `$ref`-resolved secret never appears at all — not even masked — while the real value still reaches the destination API
+- Confirm in the raw event trace that a `$ref`-resolved secret is never LLM-supplied and never appears in `tool_input` — while the real value still reaches the destination API, and can resurface in `tool_output` if that destination echoes it back
 
 **What you'll build:**
 Two independent examples sharing one mechanism. **Example 1**: a Google Drive Q&A agent with a single `corpora_search` tool config that scopes retrieval to exactly the files a user's real Drive ACLs (owner/reader/group/domain grants) allow, per session — the same metadata shape a real `gdrive_crawler`-fed corpus would have, so the query pattern is a drop-in. **Example 2**: a `web_get` tool that authenticates against a public echo endpoint ([httpbin.org](https://httpbin.org/)) with a different tenant's API key per session, looked up indirectly from stored agent secrets.
