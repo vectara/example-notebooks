@@ -1,6 +1,6 @@
 # Vectara API Tutorial Series
 
-This tutorial series provides a comprehensive, hands-on introduction to building RAG (Retrieval-Augmented Generation) applications using Vectara's REST API. Through fourteen progressive notebooks, you'll learn to create corpora, ingest data, delete documents, query information, build intelligent AI agents, orchestrate multi-agent workflows, work with file artifacts, create data analysis tools with NumPy and Pandas, use reranker instructions for domain-specific relevance tuning, constrain agent output with JSON schemas and multi-step flows, automate agents on cron or interval schedules, let agents call any REST API — public or authenticated, read or write — with the `web_get` tool, use **agent skills** to load specialist instructions on demand, and drive an agent through deterministic multi-phase pipelines using **agent steps**.
+This tutorial series provides a comprehensive, hands-on introduction to building RAG (Retrieval-Augmented Generation) applications using Vectara's REST API. Through fifteen progressive notebooks, you'll learn to create corpora, ingest data, delete documents, query information, build intelligent AI agents, orchestrate multi-agent workflows, work with file artifacts, create data analysis tools with NumPy and Pandas, use reranker instructions for domain-specific relevance tuning, constrain agent output with JSON schemas and multi-step flows, automate agents on cron or interval schedules, let agents call any REST API — public or authenticated, read or write — with the `web_get` tool, use **agent skills** to load specialist instructions on demand, drive an agent through deterministic multi-phase pipelines using **agent steps**, and use **`$ref`** to scope retrieval and inject credentials dynamically per session, without exposing either to the LLM.
 
 ## About Vectara
 
@@ -480,6 +480,27 @@ A **Contract Triage** agent that processes inbound documents through three seque
 
 ---
 
+### [Notebook 15: `$ref` — Secure, Dynamic Tool Configuration](15-ref-secrets-and-access-control.ipynb)
+
+**What you'll learn:**
+- Use `{"$ref": "session.metadata.field"}` to source a `corpora_search` tool's `metadata_filter` per session, instead of baking one filter into the agent
+- Register the exact ACL metadata fields ([`acl_owners`, `acl_readers`, `acl_groups`, `acl_domains`, ...](https://github.com/vectara/vectara-ingest/blob/main/crawlers/CRAWLERS.md#google-drive-crawler)) that vectara-ingest's `gdrive_crawler` emits in ABAC mode, and build a query-time filter that ORs a user's email, groups, and domain against them
+- Store agent-level credentials via the dedicated Agent Secrets API (`PATCH /v2/agents/{agent_key}/secrets`) and confirm they're always masked (`****`) on read
+- Use an **indirect** `$ref` (`agent.secrets[session.metadata.tenant_id]`) so one tool configuration picks a different stored secret per session
+- Confirm in the raw event trace that a `$ref`-resolved secret never appears at all — not even masked — while the real value still reaches the destination API
+
+**What you'll build:**
+Two independent examples sharing one mechanism. **Example 1**: a Google Drive Q&A agent with a single `corpora_search` tool config that scopes retrieval to exactly the files a user's real Drive ACLs (owner/reader/group/domain grants) allow, per session — the same metadata shape a real `gdrive_crawler`-fed corpus would have, so the query pattern is a drop-in. **Example 2**: a `web_get` tool that authenticates against a public echo endpoint ([httpbin.org](https://httpbin.org/)) with a different tenant's API key per session, looked up indirectly from stored agent secrets.
+
+**Key concepts:**
+- **`$ref` (EagerReference)**: a `{"$ref": "dot.path"}` value resolved server-side at the start of each turn, before the LLM sees anything — the same mechanism underlies both examples.
+- **`query_configuration` vs. `argument_override`**: `corpora_search`'s `metadata_filter` lives in `query_configuration`, which is never exposed to the agent as a fillable parameter at all — `$ref` doesn't add a restriction that wasn't already there, it adds *per-session dynamism* to a value that would otherwise be frozen at agent-creation time.
+- **Indirect (bracket) references**: `{"$ref": "agent.secrets[session.metadata.tenant_id]"}` resolves the bracketed path first and uses *that* result as the lookup key — letting one tool configuration serve arbitrarily many tenants from one secrets map.
+- **Agent Secrets API**: a dedicated, encrypted resource (`/v2/agents/{agent_key}/secrets`) — plaintext is never returned on read, only injected into outgoing tool calls at execution time.
+- **Self-contained notebook**: requires only `VECTARA_API_KEY` (creates and cleans up its own corpus and two agents).
+
+---
+
 ## Tutorial Flow
 
 ```
@@ -538,6 +559,10 @@ A **Contract Triage** agent that processes inbound documents through three seque
 14. Agent Steps — Deterministic Plan Execution
     ↓
     Drive an agent through a fixed sequence of phases (classify → extract → flag_issues) with conditional gates and reentry_step for follow-up Q&A
+
+15. $ref — Secure, Dynamic Tool Configuration
+    ↓
+    Scope a corpora_search filter and inject per-tenant secrets dynamically per session, without exposing either to the LLM
 ```
 
 ## Running the Notebooks
