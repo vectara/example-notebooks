@@ -1,6 +1,6 @@
 # Vectara API Tutorial Series
 
-This tutorial series provides a comprehensive, hands-on introduction to building RAG (Retrieval-Augmented Generation) applications using Vectara's REST API. Through fifteen progressive notebooks, you'll learn to create corpora, ingest data, delete documents, query information, build intelligent AI agents, orchestrate multi-agent workflows, work with file artifacts, create data analysis tools with NumPy and Pandas, use reranker instructions for domain-specific relevance tuning, constrain agent output with JSON schemas and multi-step flows, automate agents on cron or interval schedules, let agents call any REST API — public or authenticated, read or write — with the `web_get` tool, use **agent skills** to load specialist instructions on demand, drive an agent through deterministic multi-phase pipelines using **agent steps**, and use **`$ref`** to scope retrieval and inject credentials dynamically per session, without exposing either to the LLM.
+This tutorial series provides a comprehensive, hands-on introduction to building RAG (Retrieval-Augmented Generation) applications using Vectara's REST API. Through seventeen progressive notebooks, you'll learn to create corpora, ingest data, delete documents, query information, build intelligent AI agents, orchestrate multi-agent workflows, work with file artifacts, create data analysis tools with NumPy and Pandas, use reranker instructions for domain-specific relevance tuning, constrain agent output with JSON schemas and multi-step flows, automate agents on cron or interval schedules, let agents call any REST API — public or authenticated, read or write — with the `web_get` tool, use **agent skills** to load specialist instructions on demand, drive an agent through deterministic multi-phase pipelines using **agent steps**, use **`$ref`** to scope retrieval and inject credentials dynamically per session, without exposing either to the LLM, roll out new agent versions behind an **agent alias**, and query a corpus in **another Vectara account** with `web_get`.
 
 ## About Vectara
 
@@ -164,7 +164,7 @@ Stream generated responses in real-time using Server-Sent Events for better UX.
 - Configure tool access for agents
 - Create and manage conversation sessions
 - Send messages and maintain multi-turn context
-- View conversation history
+- Stream agent responses and handle `error` events
 
 **What you'll build:**
 A **RAG Research Assistant** agent that:
@@ -179,10 +179,12 @@ A **RAG Research Assistant** agent that:
 agent_config = {
     "name": "RAG Research Assistant",
     "model": {"name": "gpt-4o"},
-    "first_step": {
-        "type": "conversational",
-        "instructions": [...],  # Custom system prompt
-        "output_parser": {"type": "default"}
+    "first_step_name": "main",
+    "steps": {
+        "main": {
+            "instructions": [...],  # Custom system prompt
+            "output_parser": {"type": "default"}
+        }
     },
     "tool_configurations": {
         "research_paper_search": {
@@ -285,7 +287,7 @@ orchestrator_config = {
 
 **What you'll learn:**
 - Upload files (PDFs, images, documents) to agent sessions
-- List and retrieve artifact details
+- List artifacts, fetch an artifact's details, and download its raw content (`GET .../artifacts/{artifact_id}/content`)
 - Create agents with artifact-processing tools
 - Have agents analyze uploaded files and generate new artifacts
 
@@ -298,8 +300,8 @@ A **Document Analyst** agent that can:
 
 **Key concepts:**
 - **Artifacts**: Session-specific files that enable agents to work with files on-the-fly
-- **Artifact tools**: `artifact_read`, `image_read`, `document_conversion`, `artifact_grep`
-- **Two-way flow**: Users upload files, agents can generate new artifacts
+- **Artifact tools**: `artifact_read`, `image_read`, `document_conversion`, `artifact_grep`, plus `artifact_create` (configured as a `dynamic_vectara` tool) for writing new files
+- **Two-way flow**: Users upload files; agents write new artifacts with `artifact_create`
 - **Session scope**: Artifacts persist within a session without permanent indexing
 
 ---
@@ -387,7 +389,7 @@ Three query examples demonstrating:
 2. **Research Assistant Router**: Two-stage agent that classifies an incoming query (`research` / `implementation` / `comparison`) and routes to the matching handler step
 
 **Key concepts:**
-- **Structured output**: `output_parser: {"type": "structured", "json_schema": {...}, "strict": True}` guarantees valid JSON matching the declared schema
+- **Structured output**: `output_parser: {"type": "structured", "json_schema": {"name": ..., "schema": {...}, "strict": True}}` guarantees valid JSON matching the declared schema
 - **Multi-step agents**: Define named steps under `steps` and declare a `first_step_name`; each step can have its own tools, instructions, and parser
 - **Conditional routing**: Use `next_steps` with JSONPath conditions on the prior step's structured output
 - **Scoped tools**: `allowed_tools: []` on a classifier step prevents tool calls during classification
@@ -417,7 +419,7 @@ A **Research Digest Generator** agent with two schedules:
 ### [Notebook 12: Calling REST APIs with `web_get`](12-web-get-tool.ipynb)
 
 **What you'll learn:**
-- Configure an agent with the inline `web_get` tool — a general-purpose HTTP client supporting `GET`/`POST`/`PUT`/`DELETE`/`HEAD`, custom headers, and request bodies
+- Configure an agent with the inline `web_get` tool — a general-purpose HTTP client supporting `GET`/`POST`/`PUT`/`PATCH`/`DELETE`/`HEAD`, custom headers, and request bodies
 - Have the agent call a real REST API end-to-end (the demo uses public Open-Meteo so it runs out of the box; the same patterns apply to authenticated APIs and write/state-changing endpoints)
 - Inspect `tool_input` / `tool_output` events to see exactly which request the agent made and what it got back
 - Constrain the tool with `argument_override` to pin auth headers, method, timeout, and response-size limits in production
@@ -432,9 +434,9 @@ The notebook iterates the agent through several configurations — a single gene
 
 **Key concepts:**
 - **`web_get` vs. `web_search`**: `web_get` issues an HTTP request to a specific endpoint the LLM (or your `argument_override`) chooses; `web_search` goes through a search engine. Use `web_get` for calling specific REST APIs — public or private, read or write.
-- **`argument_override`**: Hardcode any subset of `WebGetToolParameters` (`url`, `method`, `headers`, `body`, `follow_redirects`, `timeout_seconds`, `max_content_bytes`, `ssl_verify`, `head_lines`/`tail_lines`). Pin an `Authorization` header for authenticated APIs, pin `method` to enforce read-only or write-only behavior, pin `url` when the agent should only talk to one endpoint.
+- **`argument_override`**: Hardcode any subset of `WebGetToolParameters` (`url`, `method`, `headers`, `body`, `auth`, `follow_redirects`, `timeout_seconds`, `max_content_bytes`, `max_body_bytes`, `response_mode`, `ssl_verify`, `head_lines`/`tail_lines`). Use `auth` with an agent-secret `$ref` for authenticated APIs (see Notebook 17), pin `method` to enforce read-only or write-only behavior, pin `url` when the agent should only talk to one endpoint.
 - **Single tool vs. specialized tools**: A single `web_get` is fine for tutorials and one-off agents. For production, register `web_get` multiple times under different names — each with its own `description_template` and `argument_override` — to get sharper tool selection, per-operation auth/limits, and cleaner per-capability telemetry.
-- **`web_get` argument shape**: The LLM-fillable arguments are HTTP-level (`url`/`method`/`headers`/`body`/...), not domain-typed (`city: str`). When you need typed function arguments, use `lambda` (in-process Python, no network) or `InlineMcpToolConfiguration` (external MCP server with proper typed functions).
+- **`web_get` argument shape**: The LLM-fillable arguments are HTTP-level (`url`/`method`/`headers`/`body`/...), not domain-typed (`city: str`). When you need typed function arguments, use `lambda` (in-process Python, no network) or an `mcp` tool (a registered MCP server with typed functions).
 - **Self-contained notebook**: requires only `VECTARA_API_KEY` (no corpora from earlier notebooks).
 
 ---
@@ -501,6 +503,44 @@ Two independent examples sharing one mechanism. **Example 1**: a Google Drive Q&
 
 ---
 
+### [Notebook 16: Agent Aliases — Canary Rollouts and Tenant Routing](16-agent-aliases.ipynb)
+
+**What you'll learn:**
+- Put a stable alias in front of an agent and create sessions through it (`POST /v2/agent_aliases/{alias_key}/sessions`)
+- Canary a new agent version with a `weighted` target, partitioned by `account_id` so each account stays on one version
+- Route sessions by metadata with `match` rules (first match wins, catch-all last)
+- Promote a version with one policy replace, and see that existing sessions keep their agent
+- Find the aliases that route to an agent (`aliased_agent_key`) before retiring it; deleting a referenced agent returns `409`
+
+**What you'll build:**
+Two versions of an Acme Cloud support agent behind a `tutorial-support` alias, taken through a direct route, a 90/10 canary, a tenant rule, promotion, and retirement of the old version.
+
+**Key concepts:**
+- **Routing policy**: an ordered list of rules, each with an optional `match` (UserFn expression over the session context) and a `single` or `weighted` target
+- **`PUT /v2/agent_aliases/{alias_key}/policy`**: replaces the policy atomically; only new sessions are affected
+- **Self-contained notebook**: requires only `VECTARA_API_KEY` (creates and deletes its own two agents and alias)
+
+---
+
+### [Notebook 17: Cross-Tenant Query with `web_get`](17-cross-tenant-query-web-get.ipynb)
+
+**What you'll learn:**
+- Query a corpus in another Vectara account by calling its query API with a `web_get` tool
+- Create a query-only API key scoped to one corpus (`POST /v2/api_keys` with `corpus_roles`) and check that it can't read or write anything else
+- Inject that key with `argument_override.auth` and an `agent.secrets` `$ref`, so it never reaches the LLM and is masked (`****`) in events
+- Use `input_transform` (jq) to build the query API's JSON body from the LLM's plain-text question, and `output_transform` to reduce the response to the answer and sources
+- Read the audit trail: `argument_override_paths` on `tool_input`, `resolved_argument_overrides` on `tool_output`
+
+**What you'll build:**
+An Acme support agent that answers from Acme's own corpus (`corpora_search`) and from a Globex corpus reached only through a scoped key (`web_get`), combining both in one answer. To run with a single account, the notebook simulates the partner by creating the Globex corpus and key in your account.
+
+**Key concepts:**
+- **Pin `url` and `method` whenever `auth` is set**, so the credential can only be sent to one endpoint
+- **`description_template`** is the description the LLM sees for a `web_get` tool
+- **Self-contained notebook**: requires only `VECTARA_API_KEY` with permission to create corpora, agents, and API keys
+
+---
+
 ## Tutorial Flow
 
 ```
@@ -563,6 +603,14 @@ Two independent examples sharing one mechanism. **Example 1**: a Google Drive Q&
 15. $ref — Secure, Dynamic Tool Configuration
     ↓
     Scope a corpora_search filter and inject per-tenant secrets dynamically per session, without exposing either to the LLM
+
+16. Agent Aliases
+    ↓
+    Canary, route by tenant, and promote agent versions behind a stable alias
+
+17. Cross-Tenant Query with web_get
+    ↓
+    Query a corpus in another Vectara account with a scoped key stored as an agent secret
 ```
 
 ## Running the Notebooks
@@ -588,9 +636,9 @@ jupyter notebook
 
 ## Important Notes
 
-1. **Run notebooks in order** - Each notebook builds on the previous one, though notebooks 9, 10, and 11 only require the corpora from 1-2 and can be run independently of 4-8. Notebooks 3, 12, 13, and 14 are fully self-contained and only need a `VECTARA_API_KEY`.
+1. **Run notebooks in order** - Each notebook builds on the previous one, though notebooks 9, 10, and 11 only require the corpora from 1-2 and can be run independently of 4-8. Notebooks 3 and 12–17 are fully self-contained and only need a `VECTARA_API_KEY`.
 2. **Corpus keys** - Save the corpus keys from Notebook 1, you'll need them in subsequent notebooks
-3. **Agent reuse** - Notebooks 5 and 6 check if agents already exist before creating duplicates
+3. **Agent re-creation** - Notebooks delete and recreate their agents on each run (`vectara_utils.delete_and_create_agent`), so re-running always applies the current configuration
 4. **Rate limiting** - The notebooks include small delays between API calls to be respectful
 5. **Cleanup** - Consider deleting test corpora/agents when done to keep your account organized
 6. **Sub-agent dependencies** - Notebook 6 creates sub-agents first, then a parent orchestrator that references them
@@ -599,23 +647,28 @@ jupyter notebook
 
 | Endpoint | Purpose | Notebook |
 |----------|---------|----------|
-| `POST /v2/corpora` | Create corpus | 1, 3 |
+| `POST /v2/corpora` | Create corpus | 1, 3, 15, 17 |
 | `GET /v2/corpora` | List corpora | 1 |
 | `POST /v2/corpora/{key}/upload_file` | Upload files | 2 |
-| `POST /v2/corpora/{key}/documents` | Index documents | 2, 3 |
-| `GET /v2/corpora/{key}/documents` | List documents | 2, 3 |
-| `DELETE /v2/corpora/{key}/documents/{id}` | Delete one document | 3 |
+| `POST /v2/corpora/{key}/documents` | Index documents | 2, 3, 15, 17 |
+| `GET /v2/corpora/{key}/documents` | List documents | 2, 3, 15 |
+| `DELETE /v2/corpora/{key}/documents/{id}` | Delete one document | 2, 3, 15 |
 | `DELETE /v2/corpora/{key}/documents` | Bulk delete documents (metadata filter / IDs) | 3 |
 | `POST /v2/corpora/{key}/reset` | Delete all documents (reset corpus) | 3 |
-| `DELETE /v2/corpora/{key}` | Delete corpus | 3 |
+| `DELETE /v2/corpora/{key}` | Delete corpus | 3, 15, 17 |
 | `POST /v2/query` | Query corpora | 4, 9 |
-| `POST /v2/agents` | Create agent | 5, 6, 7, 8, 10, 11, 12, 13, 14 |
-| `POST /v2/agents/{key}/sessions` | Create session | 5, 6, 7, 8, 10, 12, 13, 14 |
-| `POST /v2/agents/{key}/sessions/{key}/events` | Send messages / Upload artifacts | 5, 6, 7, 8, 10, 12, 13, 14 |
-| `GET /v2/agents/{key}/sessions/{key}/events` | Get conversation history | 5, 11 |
+| `POST /v2/corpora/{key}/query` | Query one corpus (called by a `web_get` tool) | 17 |
+| `POST /v2/agents` | Create agent | 5–8, 10–17 |
+| `GET /v2/agents` | List agents (find existing agents by name) | 5–8, 10–17 |
+| `DELETE /v2/agents/{key}` | Delete agent | 5–8, 10–17 |
+| `GET`/`PATCH /v2/agents/{key}/secrets` | Read (masked) / set agent secrets | 15, 17 |
+| `POST /v2/agents/{key}/sessions` | Create session | 5–8, 10, 12–15, 17 |
+| `DELETE /v2/agents/{key}/sessions/{key}` | Delete session | 8 |
+| `POST /v2/agents/{key}/sessions/{key}/events` | Send messages / Upload artifacts | 5–8, 10, 12–15, 17 |
+| `GET /v2/agents/{key}/sessions/{key}/events` | Get conversation history | 11 |
 | `GET /v2/agents/{key}/sessions/{key}/artifacts` | List session artifacts | 7 |
-| `GET /v2/agents` | List agents | 6, 10, 11 |
-| `DELETE /v2/agents/{key}` | Delete agent | 6, 7, 8, 10, 11, 12, 13, 14 |
+| `GET /v2/agents/{key}/sessions/{key}/artifacts/{id}` | Artifact details | 7 |
+| `GET /v2/agents/{key}/sessions/{key}/artifacts/{id}/content` | Download artifact content | 7 |
 | `POST /v2/tools` | Create Lambda tool | 6, 8 |
 | `GET /v2/tools` | List Lambda tools | 6, 8 |
 | `DELETE /v2/tools/{id}` | Delete Lambda tool | 6, 8 |
@@ -624,6 +677,16 @@ jupyter notebook
 | `PATCH /v2/agents/{key}/schedules/{key}` | Update schedule | 11 |
 | `DELETE /v2/agents/{key}/schedules/{key}` | Delete schedule | 11 |
 | `GET /v2/agents/{key}/schedules/{key}/executions` | Execution history | 11 |
+| `POST /v2/agent_aliases` | Create alias | 16 |
+| `GET /v2/agent_aliases` | List aliases (e.g. by `aliased_agent_key`) | 16 |
+| `PUT /v2/agent_aliases/{key}/policy` | Replace routing policy | 16 |
+| `POST /v2/agent_aliases/{key}/sessions` | Create session through an alias | 16 |
+| `GET /v2/agent_aliases/{key}/sessions/{key}` | Get session through an alias | 16 |
+| `POST /v2/agent_aliases/{key}/sessions/{key}/events` | Send messages through an alias | 16 |
+| `DELETE /v2/agent_aliases/{key}` | Delete alias | 16 |
+| `POST /v2/api_keys` | Create a scoped API key | 17 |
+| `GET /v2/api_keys` | List API keys | 17 |
+| `DELETE /v2/api_keys/{id}` | Delete API key | 17 |
 
 ## Additional Resources
 

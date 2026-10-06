@@ -239,6 +239,9 @@ def delete_and_create_agent(agent_config, agent_name, max_attempts=4):
         dr = requests.delete(f"{_BASE_URL}/agents/{existing['key']}", headers=_HEADERS)
         if dr.status_code == 204:
             print(f"Deleted existing agent '{agent_name}' ({existing['key']})")
+        elif dr.status_code == 409:
+            # Still referenced by an alias or hook; creating now would leave a duplicate.
+            raise RuntimeError(f"Agent {existing['key']} is still referenced: {dr.text}")
         else:
             print(f"Warning: failed to delete {existing['key']}: {dr.text}")
 
